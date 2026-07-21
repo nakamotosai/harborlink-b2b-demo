@@ -467,12 +467,20 @@ input:focus-visible {
 }
 
 .brand-mark {
-  display: block;
-  width: 156px;
+  display: inline-flex;
+  align-items: center;
   height: 36px;
-  background: currentColor;
-  mask: url("/images/brand/harborlink-mark.svg") center / contain no-repeat;
-  -webkit-mask: url("/images/brand/harborlink-mark.svg") center / contain no-repeat;
+  padding: 0 2px;
+  font-family: var(--font-ui), "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: currentColor;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.brand-mark::after {
+  content: "HARBORLINK";
 }
 
 .main-nav {
@@ -1112,7 +1120,7 @@ html[lang="zh"] .hero h1 {
   height: clamp(24px, 4%, 36px);
   content: "";
   pointer-events: none;
-  background: url(/favicon.ico) center / contain no-repeat;
+  background: url(/favicon.svg) center / contain no-repeat;
   opacity: 0.4;
   mix-blend-mode: multiply;
 }
@@ -1896,7 +1904,7 @@ html[lang="zh"] .hero h1 {
   height: 36px;
   background: currentColor;
   color: var(--color-gold);
-  mask: url(/images/brand/harborlink-mark.svg) no-repeat center;
+  mask: url(/images/brand/harborlink-mark.png) no-repeat center;
   mask-size: contain;
 }
 
@@ -1987,19 +1995,6 @@ html[lang="zh"] .hero h1 {
 
   color: var(--color-muted);
   line-height: 1.5;
-}
-
-.footer-beian-row {
-  display: flex;
-  align-items: center;
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px dashed var(--color-line);
-}
-
-.footer-beian-row a {
-  font-family: var(--font-ui);
-  opacity: 0.82;
 }
 
 .footer-bottom {
@@ -7645,12 +7640,18 @@ html[lang="en"] .facts-card-company-name {
 }
 
 .contact-card-brand {
-  display: block;
-  width: 130px;
+  display: inline-flex;
+  align-items: center;
   height: 32px;
-  background: var(--color-green-dark);
-  mask: url("/images/brand/harborlink-mark.svg") center / contain no-repeat;
-  -webkit-mask: url("/images/brand/harborlink-mark.svg") center / contain no-repeat;
+  font-family: var(--font-ui), "Segoe UI", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--color-green-dark);
+  text-transform: uppercase;
+}
+.contact-card-brand::after {
+  content: "HARBORLINK";
 }
 
 .contact-card-email-display {
@@ -8324,11 +8325,6 @@ html[lang="en"] .timeline-h-year {
     padding: 0 !important;
   }
   
-  .footer-beian-row {
-    justify-content: center !important;
-    margin-top: 10px !important;
-    padding-top: 10px !important;
-  }
 }
 
 /* --- 2026产品图册搜索抽屉与灯箱下载按钮样式集成 --- */

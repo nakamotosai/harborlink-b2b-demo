@@ -84,8 +84,8 @@ const contactCardIcons = [
         <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
       </button>
       <a class="brand" href={content.route} aria-label={content.company[`${content.locale}Name`] ?? content.company.jaName}>
-        <img src="/favicon.ico" alt="" class="brand-icon" width="24" height="24" />
-        <span class="brand-mark" role="img" aria-label="SINOCO"></span>
+        <img src="/logo.png" alt="" class="brand-icon" width="24" height="24" />
+        <span class="brand-mark" role="img" aria-label="HARBORLINK"></span>
       </a>
       <nav class="main-nav" aria-label="Main navigation">
         <a href={content.route}>{content.navHome}</a>
@@ -562,7 +562,7 @@ const contactCardIcons = [
         <div class="company-main-cards">
           <!-- Left: Facts Card -->
           <div class="company-facts-card" data-reveal style="--reveal-delay:80ms">
-            <h3 class="facts-card-company-name"><img src="/favicon.ico" alt="" class="inline-ico" /> {content.company[`${content.locale}Name`]}</h3>
+            <h3 class="facts-card-company-name"><img src="/logo.png" alt="" class="inline-ico" /> {content.company[`${content.locale}Name`]}</h3>
             <dl class="facts-card-grid">
               {content.companyFacts.slice(1).map(([term, detail], index) => {
                 const FIcon = factsCardIcons[index];
@@ -581,7 +581,7 @@ const contactCardIcons = [
 
           <!-- Right: Contact Form -->
           <form class="company-contact-form" id="contact-form" data-locale={content.locale} aria-label={content.contactTitle} data-reveal style="--reveal-delay:160ms">
-            <span class="contact-card-brand" role="img" aria-label="SINOCO"></span>
+            <span class="contact-card-brand" role="img" aria-label="HARBORLINK"></span>
             <p class="contact-card-email-display">E-mail ：<a href="mailto:contact@example.com">contact@example.com</a></p>
             
             <!-- 隐藏的 facts 容器，用于通过自动化验收脚本对联络信息的静态 HTML 校验 -->
@@ -676,8 +676,8 @@ const contactCardIcons = [
       <div class="footer-details-cols">
         <div class="footer-info-col">
           <span class="footer-brand-row">
-            <img src="/favicon.ico" alt="" class="inline-ico" />
-            <span class="footer-symbol-mark" role="img" aria-label="SINOCO"></span>
+            <img src="/logo.png" alt="" class="inline-ico" />
+            <span class="footer-symbol-mark" role="img" aria-label="HARBORLINK"></span>
           </span>
           <p class="footer-info-tagline">{content.footerSubtitle}</p>
           <p class="footer-info-desc">{content.footerMessage.join("")}</p>
@@ -719,12 +719,6 @@ const contactCardIcons = [
           <ul class="footer-col-links">
             <li><a href="#company">{content.locale === "zh" ? "隐私政策 (Privacy Policy)" : content.locale === "ja" ? "プライバシーポリシー (Privacy)" : "Privacy Policy"}</a></li>
             <li><a href="#company">{content.locale === "zh" ? "服务与使用条款" : content.locale === "ja" ? "ご利用規約 (Terms of Use)" : "Terms of Use"}</a></li>
-            {content.locale === "zh" && (
-              <li class="footer-beian-row">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:middle; margin-right:3px; opacity:0.8;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" style="display:inline-block; font-size:var(--text-xs);">闽ICP备20132026号-3</a>
-              </li>
-            )}
           </ul>
         </div>
       </div>
@@ -1053,7 +1047,7 @@ const contactCardIcons = [
       const allNameKeys = Object.keys(namePageMap);
       const allProductKeys = Object.keys(productsMap);
       const IMAGE_BASE = catalogImageBase;
-      const HISTORY_KEY = 'sinoco_search_history';
+      const HISTORY_KEY = 'harborlink_search_history';
 
       // 公共函数：更新清除按钮显示状态
       function updateClearButton(input, clearBtn) {
