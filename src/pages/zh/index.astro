@@ -1,0 +1,8 @@
+---
+import HomePage from "../../components/HomePage.astro";
+import { getSiteContent } from "../../data/site";
+
+const content = getSiteContent("zh");
+---
+
+<HomePage content={content} />

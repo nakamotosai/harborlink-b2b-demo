@@ -1,0 +1,374 @@
+---
+import "../styles/global.css";
+import "../styles/fonts.css";
+
+const isDev = import.meta.env.DEV;
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: "ja" | "zh" | "en";
+  preloadImages?: string[];
+}
+
+const {
+  title = "領港工業グループ",
+  description = "日本向けタイル・石材輸出の専門パートナー",
+  lang = "ja",
+  preloadImages = []
+} = Astro.props;
+
+const settingsLabels = {
+  ja: {
+    aria: "表示設定",
+    toggle: "設定",
+    color: "配色",
+    colorAria: "配色テーマ",
+    font: "書体",
+    fontAria: "書体テーマ",
+    imageMode: "画像変更",
+    imageModeAria: "画像変更モード",
+    imageModeOff: "画像変更を開始",
+    imageModeOn: "画像変更を終了",
+    imageUpload: "画像を変更",
+    imageUploading: "アップロード中",
+    imageUploaded: "変更しました",
+    imageError: "保存できませんでした",
+    imageAuthPrompt: "画像変更用の管理キーを入力してください",
+    imageAuthMissing: "管理キーが必要です"
+  },
+  zh: {
+    aria: "显示设置",
+    toggle: "设置",
+    color: "配色",
+    colorAria: "配色主题",
+    font: "字体",
+    fontAria: "字体主题",
+    imageMode: "图片修改",
+    imageModeAria: "图片修改模式",
+    imageModeOff: "开启图片修改",
+    imageModeOn: "关闭图片修改",
+    imageUpload: "替换图片",
+    imageUploading: "上传中",
+    imageUploaded: "已替换",
+    imageError: "保存失败",
+    imageAuthPrompt: "请输入图片修改管理密钥",
+    imageAuthMissing: "需要管理密钥"
+  },
+  en: {
+    aria: "Display settings",
+    toggle: "Settings",
+    color: "Theme",
+    colorAria: "Color theme",
+    font: "Font",
+    fontAria: "Font theme",
+    imageMode: "Image edits",
+    imageModeAria: "Image edit mode",
+    imageModeOff: "Start image edits",
+    imageModeOn: "Exit image edits",
+    imageUpload: "Replace image",
+    imageUploading: "Uploading",
+    imageUploaded: "Replaced",
+    imageError: "Could not save",
+    imageAuthPrompt: "Enter the image edit admin key",
+    imageAuthMissing: "Admin key required"
+  }
+}[lang];
+
+const localizedText = {
+  ja: {
+    themes: {
+      original: "現行グリーン",
+      "warm-stone": "ウォームストーン",
+      "ink-gray": "墨グレー",
+      "porcelain-blue": "磁器ブルーグレー",
+      "muted-olive": "くすみオリーブ",
+      "clay-brown": "土ものブラウン"
+    },
+    fonts: {
+      modern: ["Modern", "Zen Kaku Gothic New"],
+      system: ["System", "OS 標準日本語フォント"]
+    }
+  },
+  zh: {
+    themes: {
+      original: "原始绿色",
+      "warm-stone": "暖石色",
+      "ink-gray": "墨灰色",
+      "porcelain-blue": "瓷器蓝灰",
+      "muted-olive": "灰橄榄",
+      "clay-brown": "陶土棕"
+    },
+    fonts: {
+      modern: ["现代", "Zen Kaku Gothic New"],
+      system: ["系统", "系统默认字体"]
+    }
+  },
+  en: {
+    themes: {
+      original: "Original Green",
+      "warm-stone": "Warm Stone",
+      "ink-gray": "Ink Gray",
+      "porcelain-blue": "Porcelain Blue Gray",
+      "muted-olive": "Muted Olive",
+      "clay-brown": "Clay Brown"
+    },
+    fonts: {
+      modern: ["Modern", "Zen Kaku Gothic New"],
+      system: ["System", "System default fonts"]
+    }
+  }
+}[lang];
+
+const themeOptions = [
+  {
+    id: "original",
+    label: localizedText.themes.original,
+    colors: ["#00543f", "#003f31", "#b69354"]
+  },
+  {
+    id: "warm-stone",
+    label: localizedText.themes["warm-stone"],
+    colors: ["#80786b", "#2f3431", "#9b8765"]
+  },
+  {
+    id: "ink-gray",
+    label: localizedText.themes["ink-gray"],
+    colors: ["#6f7773", "#202725", "#8b918f"]
+  },
+  {
+    id: "porcelain-blue",
+    label: localizedText.themes["porcelain-blue"],
+    colors: ["#78898c", "#253235", "#8b9da1"]
+  },
+  {
+    id: "muted-olive",
+    label: localizedText.themes["muted-olive"],
+    colors: ["#6f765e", "#30382f", "#8a927f"]
+  },
+  {
+    id: "clay-brown",
+    label: localizedText.themes["clay-brown"],
+    colors: ["#8f6c4f", "#352d28", "#9b8069"]
+  }
+];
+
+const fontOptions = [
+  {
+    id: "modern",
+    label: localizedText.fonts.modern[0],
+    description: localizedText.fonts.modern[1]
+  },
+  {
+    id: "system",
+    label: localizedText.fonts.system[0],
+    description: localizedText.fonts.system[1]
+  }
+];
+---
+
+<!doctype html>
+<html lang={lang} data-theme="clay-brown" data-font="modern">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    {preloadImages.map((src) => <link rel="preload" as="image" href={src} />)}
+    <script is:inline>
+      (() => {
+        const themeStorageKey = "harborlink-theme";
+        const fontStorageKey = "harborlink-font";
+        const themes = new Set(["original", "warm-stone", "ink-gray", "porcelain-blue", "muted-olive", "clay-brown"]);
+        const fonts = new Set(["modern", "system"]);
+        const defaultTheme = "clay-brown";
+        const defaultFont = "modern";
+        try {
+          const savedTheme = window.localStorage.getItem(themeStorageKey);
+          if (savedTheme && themes.has(savedTheme)) {
+            document.documentElement.dataset.theme = savedTheme;
+          } else {
+            document.documentElement.dataset.theme = defaultTheme;
+          }
+          const savedFont = window.localStorage.getItem(fontStorageKey);
+          if (savedFont && fonts.has(savedFont)) {
+            document.documentElement.dataset.font = savedFont;
+          } else {
+            document.documentElement.dataset.font = defaultFont;
+          }
+        } catch (error) {
+          document.documentElement.dataset.theme = defaultTheme;
+          document.documentElement.dataset.font = defaultFont;
+        }
+      })();
+    </script>
+    {isDev && <link rel="stylesheet" href="/font-debug-panel.css" />}
+    <title>{title}</title>
+  </head>
+  <body>
+    <slot />
+    <aside class="settings-switcher" data-settings-switcher aria-label={settingsLabels.aria}>
+      <button class="settings-switcher-toggle" type="button" data-settings-toggle aria-expanded="false" aria-controls="settings-switcher-panel">
+        {settingsLabels.toggle}
+      </button>
+      <div class="settings-switcher-panel" id="settings-switcher-panel" data-settings-panel hidden>
+        <div class="settings-group">
+          <p>{settingsLabels.color}</p>
+          <div class="settings-options" role="listbox" aria-label={settingsLabels.colorAria}>
+            {themeOptions.map((theme) => (
+              <button class="settings-choice theme-choice" type="button" role="option" data-theme-choice={theme.id} aria-selected="false">
+                <span class="theme-choice-swatches" aria-hidden="true">
+                  {theme.colors.map((color) => <i style={`background:${color}`}></i>)}
+                </span>
+                <span>{theme.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="settings-group">
+          <p>{settingsLabels.font}</p>
+          <div class="settings-options font-options" role="listbox" aria-label={settingsLabels.fontAria}>
+            {fontOptions.map((font) => (
+              <button class="settings-choice font-choice" type="button" role="option" data-font-choice={font.id} aria-selected="false">
+                <span>{font.label}</span>
+                <small>{font.description}</small>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="settings-group settings-image-group">
+          <p>{settingsLabels.imageMode}</p>
+          <button
+            class="settings-choice image-edit-choice"
+            type="button"
+            data-image-edit-toggle
+            data-label-off={settingsLabels.imageModeOff}
+            data-label-on={settingsLabels.imageModeOn}
+            data-upload-label={settingsLabels.imageUpload}
+            data-uploading-label={settingsLabels.imageUploading}
+            data-uploaded-label={settingsLabels.imageUploaded}
+            data-error-label={settingsLabels.imageError}
+            aria-pressed="false"
+            aria-label={settingsLabels.imageModeAria}
+          >
+            <span>{settingsLabels.imageModeOff}</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+    <script is:inline>
+      (() => {
+        const themeStorageKey = "harborlink-theme";
+        const fontStorageKey = "harborlink-font";
+        const localeCookieName = "harborlink-locale";
+        const themes = new Set(["original", "warm-stone", "ink-gray", "porcelain-blue", "muted-olive", "clay-brown"]);
+        const fonts = new Set(["modern", "system"]);
+        const locales = new Set(["ja", "zh", "en"]);
+        const defaultTheme = "clay-brown";
+        const defaultFont = "modern";
+        const switcher = document.querySelector("[data-settings-switcher]");
+        const anchor = document.querySelector("[data-settings-anchor]");
+        const toggle = document.querySelector("[data-settings-toggle]");
+        const panel = document.querySelector("[data-settings-panel]");
+        const themeChoices = Array.from(document.querySelectorAll("[data-theme-choice]"));
+        const fontChoices = Array.from(document.querySelectorAll("[data-font-choice]"));
+
+        if (!switcher || !toggle || !panel || themeChoices.length === 0 || fontChoices.length === 0) return;
+
+        if (anchor) {
+          anchor.appendChild(switcher);
+          switcher.classList.add("settings-switcher-header");
+        }
+
+        const getTheme = () => {
+          const savedTheme = document.documentElement.dataset.theme || defaultTheme;
+          return themes.has(savedTheme) ? savedTheme : defaultTheme;
+        };
+
+        const setExpanded = (expanded) => {
+          toggle.setAttribute("aria-expanded", String(expanded));
+          panel.hidden = !expanded;
+        };
+
+        const syncChoices = () => {
+          const activeTheme = getTheme();
+          const activeFont = getFont();
+          themeChoices.forEach((choice) => {
+            choice.setAttribute("aria-selected", String(choice.getAttribute("data-theme-choice") === activeTheme));
+          });
+          fontChoices.forEach((choice) => {
+            choice.setAttribute("aria-selected", String(choice.getAttribute("data-font-choice") === activeFont));
+          });
+        };
+
+        const getFont = () => {
+          const savedFont = document.documentElement.dataset.font || defaultFont;
+          return fonts.has(savedFont) ? savedFont : defaultFont;
+        };
+
+        const applyTheme = (theme) => {
+          const nextTheme = themes.has(theme) ? theme : defaultTheme;
+          document.documentElement.dataset.theme = nextTheme;
+          try {
+            window.localStorage.setItem(themeStorageKey, nextTheme);
+          } catch (error) {}
+          syncChoices();
+        };
+
+        const applyFont = (font) => {
+          const nextFont = fonts.has(font) ? font : defaultFont;
+          document.documentElement.dataset.font = nextFont;
+          try {
+            window.localStorage.setItem(fontStorageKey, nextFont);
+          } catch (error) {}
+          syncChoices();
+        };
+
+        syncChoices();
+
+        toggle.addEventListener("click", () => {
+          setExpanded(panel.hidden);
+        });
+
+        themeChoices.forEach((choice) => {
+          choice.addEventListener("click", () => {
+            applyTheme(choice.getAttribute("data-theme-choice") || defaultTheme);
+          });
+        });
+
+        fontChoices.forEach((choice) => {
+          choice.addEventListener("click", () => {
+            applyFont(choice.getAttribute("data-font-choice") || defaultFont);
+          });
+        });
+
+        document.querySelectorAll("[data-locale-link]").forEach((link) => {
+          link.addEventListener("click", () => {
+            const locale = link.getAttribute("data-locale-link") || "";
+            if (!locales.has(locale)) return;
+            document.cookie = `${localeCookieName}=${encodeURIComponent(locale)}; Path=/; Max-Age=31536000; SameSite=Lax`;
+          });
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!switcher.contains(event.target)) setExpanded(false);
+        });
+
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") setExpanded(false);
+        });
+      })();
+    </script>
+
+    <script src="/admin/editor.js" defer></script>
+    {isDev && <script src="/font-debug-panel.js" defer></script>}
+  </body>
+</html>

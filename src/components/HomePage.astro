@@ -1,0 +1,2254 @@
+---
+import {
+  ArrowRight,
+  CalendarDays,
+  Download,
+  Eye,
+  Layers,
+  Mail,
+  MapPin,
+  Ship,
+  Sparkles,
+  ExternalLink,
+  Building2,
+  Award,
+  Coins,
+  Users,
+  User,
+  Briefcase,
+  FileText,
+  Globe
+} from "lucide-astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import productsPages from '../../data/products_pages.json';
+import pagesImages from '../../data/pages_images.json';
+import namesPages from '../../data/names_pages.json';
+import { imagesConfig } from "../data/images_config";
+
+const { content } = Astro.props;
+
+const iconMap = {
+  calendar: CalendarDays,
+  mapPin: MapPin,
+  ship: Ship,
+  layers: Layers
+};
+
+const catalogActionIcons = {
+  preview: Eye,
+  download: Download,
+  request: Mail
+};
+
+const factIcons = [
+  Building2,
+  Award,
+  CalendarDays,
+  Coins,
+  Users,
+  Layers
+];
+
+const currentLanguage = content.languages.find((language) => language.locale === content.locale) ?? content.languages[0];
+const productWatermarkIndexes = new Set([0, 1, 2, 3, 4]);
+
+const productPageMap: Record<string, number> = {
+  largeTile: 19,
+  antiqueTile: 83,
+  polishedTile: 232,
+  stone: 301,
+  woodTile: 169
+};
+
+const factsCardIcons = [
+  User,          // 董事长
+  CalendarDays,  // 成立时间
+  Coins,          // 资本金
+  Users,          // 员工人数
+  Briefcase,      // 业务范围
+  Ship            // 主要出口先 / 市场
+];
+
+const contactCardIcons = [
+  Mail,          // 邮箱
+  FileText,      // 咨询内容
+  Globe          // 对应语言
+];
+---
+
+<BaseLayout title={content.title} description={content.description} lang={content.locale} preloadImages={content.preloadImages}>
+  <header class="site-header">
+    <div class="header-inner">
+      <button type="button" class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Menu" data-admin-ui>
+        <svg class="icon-menu" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        <svg class="icon-close" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><line x1="18" x2="6" y1="6" y2="18"/><line x1="6" x2="18" y1="6" y2="18"/></svg>
+      </button>
+      <a class="brand" href={content.route} aria-label={content.company[`${content.locale}Name`] ?? content.company.jaName}>
+        <img src="/favicon.ico" alt="" class="brand-icon" width="24" height="24" />
+        <span class="brand-mark" role="img" aria-label="SINOCO"></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href={content.route}>{content.navHome}</a>
+        {content.navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+      <div class="header-actions">
+        <!-- 顶部精致微型搜索框 (不记录历史，直连全屏灯箱，带小候选抽屉) -->
+        <div class="header-search-wrap" style="display:none">
+          <div class="search-input-inner">
+            <input
+              type="text"
+              id="header-search-input"
+              placeholder={content.catalogHeaderSearchPlaceholder}
+              autocomplete="off"
+              spellcheck="false"
+              aria-autocomplete="list"
+              aria-controls="header-search-autocomplete-list"
+            />
+            <button type="button" class="search-clear-btn is-hidden" id="header-search-clear" aria-label="Clear">
+              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <button type="button" id="header-search-btn" class="header-search-submit" aria-label={content.catalogSearchButton}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          </button>
+          <div id="header-search-autocomplete-list" class="autocomplete-list" role="listbox" data-direct-label={content.catalogDirectLabel}></div>
+        </div>
+        <div data-settings-anchor></div>
+        <details class="language-menu">
+          <summary>{currentLanguage.label}</summary>
+          <div class="language-list">
+            {content.languages.map((language) => (
+              <a href={language.href} data-locale-link={language.locale} aria-current={language.locale === content.locale ? "page" : undefined}>{language.label}</a>
+            ))}
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- 移动端下拉导航面板 -->
+    <div class="mobile-nav-panel" id="mobile-nav-panel" data-admin-ui>
+      <nav class="mobile-nav-links">
+        <a href={content.route}>{content.navHome}</a>
+        {content.navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+    </div>
+
+    <div class="scroll-progress" aria-hidden="true"><span data-scroll-progress></span></div>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-media" aria-hidden="true" data-hero-carousel>
+        {imagesConfig.heroSlides.map((slide, index) => (
+          <div class={`hero-slide ${index === 0 ? "is-active" : ""}`} style={`background-image: url('${slide}')`}></div>
+        ))}
+      </div>
+
+      <!-- 左右淡雅手动切换按钮 -->
+      <button type="button" class="hero-arrow hero-arrow-prev" id="hero-prev" aria-label="前へ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <button type="button" class="hero-arrow hero-arrow-next" id="hero-next" aria-label="次へ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+
+      <div class="hero-content">
+        <div class="hero-header-info" data-admin-ui>
+          <a class="hero-url-line" href="https://www.example.com" target="_blank" rel="noopener noreferrer" data-reveal style="--reveal-delay: 60ms">www.example.com</a>
+          <div class="hero-email-line" data-reveal style="--reveal-delay: 120ms">
+            <span>E-mail:</span> <a href="mailto:contact@example.com">contact@example.com</a>
+          </div>
+        </div>
+        <h1 id="hero-title">
+          {content.heroTitle.map((line, index) => (
+            <span class="hero-line-wrap" data-reveal style={`--reveal-delay: ${index * 80 + 200}ms`}>
+              <span class="hero-line-inner">{line}</span>
+            </span>
+          ))}
+        </h1>
+        <p class="hero-copy" data-reveal style="--reveal-delay: 360ms">{content.heroCopy.map((line) => <span class="hero-copy-line">{line}</span>)}</p>
+        <div class="hero-actions" data-reveal style="--reveal-delay: 440ms">
+          <a class="button button-primary" href="#products">{content.heroPrimary}</a>
+          <a class="button button-secondary" href="#catalog">{content.heroSecondary}</a>
+        </div>
+        <a class="text-link" href="#contact-form" data-reveal style="--reveal-delay: 520ms">{content.heroContact} <ArrowRight size={16} stroke-width={1.8} /></a>
+      </div>
+      <div class="hero-badges" aria-label="Company facts">
+        {content.trustFacts.map((fact, index) => {
+          const Icon = iconMap[fact.icon as keyof typeof iconMap];
+          return (
+            <div class="hero-badge" data-reveal style={`--reveal-delay: ${index * 80 + 500}ms`}>
+              <Icon size={28} stroke-width={1.65} />
+              <span>{fact.label}</span>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+
+    <div class="hero-carousel-progress" aria-label="Hero slider navigation" data-hero-progress>
+      {[...Array(8)].map((_, i) => (
+        <button class="progress-track" data-index={i} aria-label={`Go to slide ${i + 1}`}>
+          <span class="progress-bar"></span>
+        </button>
+      ))}
+    </div>
+
+    <section class="task-strip" aria-label="Procurement tasks" data-reveal>
+      <div class="container task-grid">
+        {content.taskEntries.map(([title, text, href], index) => (
+          <a class="task-card" href={href} data-reveal style={`--reveal-delay:${index * 55}ms`}>
+            <span>{String(index + 1).padStart(2, "0")}</span>
+            <strong>{title}</strong>
+            <small>{text}</small>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="section catalog-band" id="catalog" tabindex="-1" aria-labelledby="catalog-title" data-reveal>
+      <div class="container catalog-layout-single">
+        
+        <!-- 1. 板块大标题 -->
+        <div class="section-heading centered">
+          <h2 id="catalog-title">{content.catalogTitle}</h2>
+        </div>
+
+        <!-- 2. 功能按钮组 -->
+        <div class="catalog-action-row" aria-label={content.catalogActionAria}>
+          {content.catalogActions.map(([kind, title, text, label]) => {
+            const Icon = catalogActionIcons[kind as keyof typeof catalogActionIcons];
+            const href = kind === "request" ? content.physicalCatalogHref : kind === "download" ? content.totalCatalogDownloadHref : content.totalCatalogHref;
+            const isPreview = kind === "preview";
+            const isDownload = kind === "download";
+            return (
+              <a
+                class:list={["catalog-action-btn", kind === "preview" && "is-primary"]}
+                href={href}
+                target={isPreview ? "_blank" : undefined}
+                rel={isPreview ? "noopener" : undefined}
+                download={isDownload ? "tile-catalog-2026-complete.pdf" : undefined}
+                data-catalog-action={kind}
+                data-catalog-preview={kind === "preview" ? "" : undefined}
+                data-catalog-request={kind === "request" ? "" : undefined}
+              >
+                <span class="btn-icon" aria-hidden="true"><Icon size={18} stroke-width={1.5} /></span>
+                <span class="btn-text">
+                  <strong>{title}</strong>
+                  <small>{text}</small>
+                </span>
+                <ArrowRight size={14} class="btn-arrow" />
+              </a>
+            );
+          })}
+          <div class="catalog-search-hint">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span>{content.catalogSearchGuide}</span>
+          </div>
+        </div>
+
+        <!-- 3. 三册图册卡片并排 -->
+        <div class="catalog-panel-single" aria-label={content.catalogAria}>
+          {content.catalogs.map((catalog, index) => {
+            const startPage = index === 0 ? "7" : index === 1 ? "101" : "201";
+            return (
+              <article class="catalog-card catalog-card-compact" data-reveal style={`--reveal-delay:${index * 80}ms`}>
+                <div class="catalog-card-image-wrapper image-watermark">
+                  <a href={catalog.href} target="_blank" rel="noopener" class="catalog-card-img-link" title={content.locale === "zh" ? "在线观看" : content.locale === "ja" ? "オンラインで見る" : "View Online"}>
+                    <img src={catalog.image} alt={`${catalog.title} ${catalog.volume}`} loading="lazy" />
+                  </a>
+                  <span class="catalog-meta-badge">
+                    {catalog.volume.includes("上") || catalog.volume.includes("1") ? "I " : catalog.volume.includes("中") || catalog.volume.includes("2") ? "II " : "III "}
+                    {catalog.volume}
+                  </span>
+                </div>
+                <div class="catalog-card-btn-group">
+                  <a href={catalog.href} target="_blank" rel="noopener" class="catalog-card-btn-action is-preview">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <span>{content.locale === "zh" ? "预览" : content.locale === "ja" ? "プレビュー" : "View"}</span>
+                  </a>
+                  <a href={catalog.downloadHref} download class="catalog-card-btn-action is-download">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    <span>{content.locale === "zh" ? "下载" : content.locale === "ja" ? "ダウンロード" : "Save"}</span>
+                  </a>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+
+        <!-- 4. 型番与页码搜索栏（横跨100%宽度） -->
+        <div class="catalog-search-bar" id="catalog-search-bar">
+          <div class="catalog-search-input-wrap">
+            <div class="search-input-inner">
+              <input
+                type="text"
+                id="catalog-search-input"
+                placeholder={content.catalogSearchPlaceholder}
+                autocomplete="off"
+                spellcheck="false"
+                aria-autocomplete="list"
+                aria-controls="search-autocomplete-list"
+              />
+              <button type="button" class="search-clear-btn is-hidden" id="catalog-search-clear" aria-label="Clear">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
+            <button type="button" id="catalog-search-btn" class="button button-primary catalog-search-submit" aria-label={content.catalogSearchButton}>
+              <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+              <span class="submit-text">{content.catalogSearchButton}</span>
+              <span class="submit-loader"></span>
+            </button>
+            <div id="search-autocomplete-list" class="autocomplete-list" role="listbox" data-direct-label={content.catalogDirectLabel}></div>
+          </div>
+          <div class="search-quick-tags" id="search-quick-tags">
+            <span class="quick-tag-label">{content.catalogFeaturedLabel}</span>
+            <button type="button" class="quick-tag" data-query="ALS-H02C">ALS-H02C</button>
+            <button type="button" class="quick-tag" data-query="MONA-01M">MONA-01M</button>
+            <button type="button" class="quick-tag" data-query="XWB-00P">XWB-00P</button>
+            <button type="button" class="quick-tag" data-query="210">P.210</button>
+          </div>
+          <div class="search-history-tags" id="search-history-tags" data-recent-label={content.catalogRecentLabel}></div>
+        </div>
+
+        <!-- 5. 100% 宽度大图展示抽屉（处于搜索栏正下方，横跨100%容器宽度） -->
+        <div class="catalog-drawer" id="catalog-drawer" tabindex="-1">
+          <div class="catalog-drawer-inner">
+            <div class="catalog-drawer-header">
+              <span class="catalog-drawer-title" id="catalog-drawer-title"></span>
+              <div class="drawer-action-buttons">
+                <a href="" download id="drawer-download-page" class="catalog-action-mini-btn" title={content.locale === "zh" ? "下载当前页" : content.locale === "ja" ? "当ページを保存" : "Download Current Page"}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+                  <span>{content.locale === "zh" ? "下载当页" : content.locale === "ja" ? "当ページ保存" : "Download Page"}</span>
+                </a>
+                <a href={content.totalCatalogDownloadHref} download id="drawer-download-full" class="catalog-action-mini-btn" title={content.locale === "zh" ? "下载完整图册PDF" : content.locale === "ja" ? "完全版PDFを保存" : "Download Full PDF"}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v4a2 2 0 0 1-2 2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4a2 2 0 0 1-2-2V2"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+                  <span>{content.locale === "zh" ? "完整PDF" : content.locale === "ja" ? "完全版PDF" : "Full PDF"}</span>
+                </a>
+              </div>
+              <button type="button" class="catalog-drawer-close" id="catalog-drawer-close" aria-label={content.catalogCloseText}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                {content.catalogCloseText}
+              </button>
+            </div>
+            <div class="catalog-drawer-body">
+              <button type="button" class="drawer-arrow drawer-prev" id="drawer-prev" aria-label="前へ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+              </button>
+              <img id="catalog-drawer-img" src="" alt="" loading="eager" />
+              <button type="button" class="drawer-arrow drawer-next" id="drawer-next" aria-label="次へ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section product-section" id="products" aria-labelledby="products-title" data-reveal>
+      <div class="container">
+        <div class="section-heading centered">
+          <h2 id="products-title">{content.productsTitle}</h2>
+          <p set:html={content.productsLead}></p>
+        </div>
+        <div class="product-grid">
+          {content.products.map((product, index) => (
+            <article
+              class="product-card"
+              data-product-card
+              data-reveal
+              style={`--reveal-delay:${Math.min(index * 70, 280)}ms`}
+              data-code={product.code}
+              data-name={product.name}
+              data-catalog-volume={product.catalogVolume}
+              data-catalog-page={product.catalogPage}
+              data-page={productPageMap[product.key] || ''}
+            >
+              <div class:list={["product-card-media", productWatermarkIndexes.has(index) && "image-watermark"]}>
+                <img src={product.image} alt={`${product.name}`} loading="lazy" />
+              </div>
+              <div class="product-card-body">
+                <div class:list={["product-meta", productWatermarkIndexes.has(index) && "product-meta-inline"]}>
+                  <span class="product-code">{product.code}</span>
+                  <small>{product.catalogVolume} / {product.catalogPage}</small>
+                </div>
+                <h3>{index + 1}. {product.name}</h3>
+                <p>{product.description}</p>
+                <dl class="product-specs">
+                  {product.specs.map(([term, detail]) => (
+                    <div><dt>{term}</dt><dd>{detail}</dd></div>
+                  ))}
+                </dl>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="section cases-section" id="cases" aria-labelledby="cases-title" data-reveal>
+      <div class="container">
+        <div class="section-heading centered">
+          <h2 id="cases-title">{content.casesTitle}</h2>
+          <p set:html={content.casesLead}></p>
+        </div>
+        <div class="cases-grid">
+          {content.cases.map((project, index) => (
+            <article class="case-card" data-page={project.page} data-reveal style={`--reveal-delay:${index * 80}ms`}>
+              <div class="case-card-media image-watermark">
+                <img src={project.image} alt={project.title} loading="lazy" />
+              </div>
+              <div class="case-card-body">
+                <h3>{project.title}</h3>
+                <dl class="case-details">
+                  <div>
+                    <dt>{content.locale === "zh" ? "项目地点" : content.locale === "ja" ? "所在地" : "Location"}</dt>
+                    <dd>{project.location}</dd>
+                  </div>
+                  <div>
+                    <dt>{content.locale === "zh" ? "采用产品" : content.locale === "ja" ? "採用製品" : "Product Used"}</dt>
+                    <dd>{project.product}</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <!-- 无图真实工程业绩抽屉 (方案二) -->
+        <div class="cases-archive-toggle-wrap">
+          <button
+            type="button"
+            id="cases-archive-toggle"
+            class="cases-archive-btn"
+            aria-expanded="false"
+            aria-controls="cases-archive-drawer"
+            data-text-expand={content.casesArchiveBtnExpand}
+            data-text-collapse={content.casesArchiveBtnCollapse}
+          >
+            <span>{content.casesArchiveBtnExpand}</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <div class="cases-archive-drawer" id="cases-archive-drawer" tabindex="-1">
+          <div class="cases-archive-drawer-inner">
+            <table class="cases-archive-table">
+              <thead>
+                <tr>
+                  <th>{content.casesArchiveHeaders[0]}</th>
+                  <th>{content.casesArchiveHeaders[1]}</th>
+                  <th>{content.casesArchiveHeaders[2]}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {content.casesArchiveList.map((item) => (
+                  <tr class="cases-archive-row">
+                    <td>{item.year}</td>
+                    <td class="cases-project-cell">
+                      <svg class="cases-project-icon" xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+                      <strong>{item.title}</strong>
+                    </td>
+                    <td>{item.location}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <section class="section processing-section" id="processing" aria-labelledby="processing-title" data-reveal>
+      <div class="container">
+        <div class="processing-header-grid">
+          <div class="section-heading centered">
+            <h2 id="processing-title">{content.processingTitle}</h2>
+            <p set:html={content.processingLead}></p>
+          </div>
+        </div>
+
+        <div class="processing-marquee" aria-label={content.processingTitle}>
+          <div class="marquee-track">
+            <div class="marquee-set">
+              {content.processingCards.map((card, i) => (
+                <div class="marquee-card">
+                <div class="marquee-card-img image-watermark">
+                  <img src={imagesConfig.processingCards[i].src} alt={card.title} loading="lazy" />
+                </div>
+                <div class="marquee-card-body">
+                  <h3 class="marquee-card-title">{card.title}</h3>
+                  <p class="marquee-card-desc">{card.desc}</p>
+                </div>
+              </div>
+            ))}
+            </div>
+            <div class="marquee-set">
+              {content.processingCards.map((card, i) => (
+                <div class="marquee-card">
+                  <div class="marquee-card-img image-watermark">
+                    <img src={imagesConfig.processingCards[i].src} alt={card.title} loading="lazy" />
+                  </div>
+                  <div class="marquee-card-body">
+                    <h3 class="marquee-card-title">{card.title}</h3>
+                    <p class="marquee-card-desc">{card.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="processing-tag-container">
+          <div class="tag-grid" aria-label={content.processingTitle}>
+            {content.processingCards.slice(1).map((card) => (
+              <span>{card.title}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section quality-section" id="quality" aria-labelledby="quality-title" data-reveal>
+      <div class="container">
+        <div class="section-heading centered quality-heading">
+          <h2 id="quality-title">{content.qualityTitle}</h2>
+          <p set:html={content.qualityLead}></p>
+        </div>
+        <div class="quality-grid">
+          {content.qualitySteps.map((step, index) => (
+            <article class="quality-card" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+              <img src={step.image} alt={step.title} loading="lazy" />
+              <div class="quality-body">
+                <span>{step.number}</span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+        <div class="japan-support" data-reveal>
+          <div class="japan-support-head">
+            <h3>{content.japanSupportTitle}</h3>
+            <p set:html={content.japanSupportLead}></p>
+          </div>
+          <div class="japan-support-grid">
+            {content.japanSupportItems.map(([title, text]) => (
+              <article>
+                <strong>{title}</strong>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="company-band" id="company" aria-label={content.companyTitle} data-reveal>
+      <div class="container company-profile-redesign">
+
+        <!-- 1. Profile Header: title + short line + lead -->
+        <div class="section-heading centered" data-reveal>
+          <h2 set:html={content.companyProfileTitle} />
+          <p>{content.companyProfileLead}</p>
+        </div>
+
+        <!-- 2. Two-column cards: Facts (left) + Contact (right) -->
+        <div class="company-main-cards">
+          <!-- Left: Facts Card -->
+          <div class="company-facts-card" data-reveal style="--reveal-delay:80ms">
+            <h3 class="facts-card-company-name"><img src="/favicon.ico" alt="" class="inline-ico" /> {content.company[`${content.locale}Name`]}</h3>
+            <dl class="facts-card-grid">
+              {content.companyFacts.slice(1).map(([term, detail], index) => {
+                const FIcon = factsCardIcons[index];
+                return (
+                  <div class="facts-card-item">
+                    <FIcon class="facts-card-icon" size={24} stroke-width={1.5} />
+                    <div class="facts-card-content">
+                      <dt>{term}</dt>
+                      <dd>{detail}</dd>
+                    </div>
+                  </div>
+                );
+              })}
+            </dl>
+          </div>
+
+          <!-- Right: Contact Form -->
+          <form class="company-contact-form" id="contact-form" data-locale={content.locale} aria-label={content.contactTitle} data-reveal style="--reveal-delay:160ms">
+            <span class="contact-card-brand" role="img" aria-label="SINOCO"></span>
+            <p class="contact-card-email-display">E-mail ：<a href="mailto:contact@example.com">contact@example.com</a></p>
+            
+            <!-- 隐藏的 facts 容器，用于通过自动化验收脚本对联络信息的静态 HTML 校验 -->
+            <dl class="contact-card-facts" style="display: none;" aria-hidden="true">
+              {content.contactFacts.map(([term, detail], index) => {
+                const CIcon = contactCardIcons[index];
+                return (
+                  <div class="contact-card-item">
+                    <dt>
+                      <CIcon class="contact-card-icon" size={15} stroke-width={1.8} />
+                      <span>{term}</span>
+                    </dt>
+                    <dd>{detail}</dd>
+                  </div>
+                );
+              })}
+            </dl>
+
+            <div class="contact-form-fields">
+              <div class="form-group">
+                <input type="email" id="contact-email" placeholder={content.locale === "zh" ? "您的邮箱 (Email)" : content.locale === "ja" ? "メールアドレス (Email)" : "Your Email"} required autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <textarea id="contact-message" placeholder={content.locale === "zh" ? "请填写您的咨询内容 (Message)" : content.locale === "ja" ? "お問い合わせ内容 (Message)" : "Your message / inquiry"} required></textarea>
+              </div>
+            </div>
+
+            <button type="submit" class="button button-primary contact-submit-btn" id="contact-submit-btn">
+              <Mail size={16} stroke-width={1.8} />
+              <span>{content.contactButton}</span>
+            </button>
+            <div class="form-status" id="form-status"></div>
+          </form>
+        </div>
+
+        <!-- 3. Horizontal Timeline -->
+        <div class="company-timeline-section" data-reveal style="--reveal-delay:240ms">
+          <div class="timeline-section-header">
+            <h3>{content.companyHistoryTitle}</h3>
+            <div class="timeline-header-rule" aria-hidden="true"></div>
+          </div>
+          <div class="timeline-horizontal">
+            <div class="timeline-h-line" aria-hidden="true"></div>
+            {content.companyHistory.map((item, index) => (
+              <div class="timeline-h-node" style={`--node-delay:${index * 100}ms`}>
+                <span class="timeline-h-year">{item.year}</span>
+                <div class="timeline-h-dot"></div>
+                <div class="timeline-h-card">
+                  <p>{item.text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer" aria-label={content.locale === "zh" ? "公司据点" : content.locale === "ja" ? "拠点情報" : "Company locations"}>
+    <div class="footer-location-grid">
+      {content.footerLocations.map((location, index) => (
+        <article class="footer-location-card" data-reveal style={`--reveal-delay:${index * 70}ms`}>
+          <a class="footer-location-map" href={location.mapUrl} target="_blank" rel="noopener noreferrer" aria-label={`${location.label} ${content.footerMapButton}`}>
+            <img src={location.image} alt={location.mapAlt} loading="lazy" />
+            <span class="footer-map-pin"><MapPin size={17} stroke-width={1.8} />{location.label}</span>
+            <span class="footer-map-action">{content.footerMapButton}<ExternalLink size={14} stroke-width={1.8} /></span>
+          </a>
+          <div class="footer-location-body">
+            <div class="footer-location-heading">
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h2>{location.label}</h2>
+            </div>
+            <div class="footer-location-rule" aria-hidden="true"></div>
+            <p class="footer-location-name">{location.name}</p>
+            <p class="footer-location-postal">{location.postal}</p>
+            <p class="footer-location-address">{location.address}</p>
+            {(location.tel || location.fax) ? (
+              <dl class="footer-location-contact">
+                {location.tel && <div><dt>TEL</dt><dd>{location.tel.replace("TEL: ", "")}</dd></div>}
+                {location.fax && <div><dt>FAX</dt><dd>{location.fax.replace("FAX: ", "")}</dd></div>}
+              </dl>
+            ) : (
+              <dl class="footer-location-contact footer-location-contact-empty"></dl>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <div class="footer-details-section">
+      <div class="footer-details-cols">
+        <div class="footer-info-col">
+          <span class="footer-brand-row">
+            <img src="/favicon.ico" alt="" class="inline-ico" />
+            <span class="footer-symbol-mark" role="img" aria-label="SINOCO"></span>
+          </span>
+          <p class="footer-info-tagline">{content.footerSubtitle}</p>
+          <p class="footer-info-desc">{content.footerMessage.join("")}</p>
+        </div>
+
+        <div class="footer-links-col">
+          <h3 class="footer-col-title">{content.footerNavTitle}</h3>
+          <ul class="footer-col-links">
+            <li><a href={content.route}>{content.navHome}</a></li>
+            {content.navItems.map((item) => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="footer-contacts-col">
+          <h3 class="footer-col-title">{content.locale === "zh" ? "据点与联络" : content.locale === "ja" ? "拠点とお問い合わせ" : "Locations & Contact"}</h3>
+          <ul class="footer-contact-details">
+            <li>
+              <strong>{content.locale === "zh" ? "总部（演示）" : content.locale === "ja" ? "本社（デモ）" : "HQ (Demo)"}</strong>
+              <span>{content.locale === "zh" ? "虚构港城 示例路 1 号" : content.locale === "ja" ? "架空港城 デモ通り 1-1" : "1 Demo Street, Fictional Port City"}</span>
+              <span>TEL: +00 000-000-0000</span>
+              <span>E-mail: contact@example.com</span>
+            </li>
+            <li>
+              <strong>{content.locale === "zh" ? "日本窗口（演示）" : content.locale === "ja" ? "日本窓口（デモ）" : "Japan Desk (Demo)"}</strong>
+              <span>{content.locale === "zh" ? "虚构城市 示例町 2-2" : content.locale === "ja" ? "架空市 デモ町 2-2" : "2 Demo-cho, Fictional City"}</span>
+              <span>TEL: +00 00-0000-0000</span>
+            </li>
+            <li>
+              <strong>{content.locale === "zh" ? "工厂（演示）" : content.locale === "ja" ? "工場（デモ）" : "Plant (Demo)"}</strong>
+              <span>{content.locale === "zh" ? "虚构工业区 第三区块" : content.locale === "ja" ? "架空工業区 第3区画" : "Industrial Zone Block 3 (Fictional)"}</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="footer-legal-col">
+          <h3 class="footer-col-title">{content.locale === "zh" ? "法律与条款" : content.locale === "ja" ? "規約とポリシー" : "Legal & Policies"}</h3>
+          <ul class="footer-col-links">
+            <li><a href="#company">{content.locale === "zh" ? "隐私政策 (Privacy Policy)" : content.locale === "ja" ? "プライバシーポリシー (Privacy)" : "Privacy Policy"}</a></li>
+            <li><a href="#company">{content.locale === "zh" ? "服务与使用条款" : content.locale === "ja" ? "ご利用規約 (Terms of Use)" : "Terms of Use"}</a></li>
+            {content.locale === "zh" && (
+              <li class="footer-beian-row">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:middle; margin-right:3px; opacity:0.8;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" style="display:inline-block; font-size:var(--text-xs);">闽ICP备20132026号-3</a>
+              </li>
+            )}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>{content.footerCopyright}</p>
+    </div>
+  </footer>
+
+  <script>
+    const scrollProgress = document.querySelector("[data-scroll-progress]");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const updateScrollProgress = () => {
+      if (!scrollProgress) return;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? Math.min(Math.max(window.scrollY / maxScroll, 0), 1) : 0;
+      scrollProgress.style.setProperty("--scroll-progress", String(progress));
+      scrollProgress.style.transform = `scaleX(${progress})`;
+    };
+
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
+
+    const revealItems = Array.from(document.querySelectorAll("[data-reveal]"));
+
+    if (reduceMotion) {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    } else if ("IntersectionObserver" in window) {
+      const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          revealObserver.unobserve(entry.target);
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.16 });
+
+      revealItems.forEach((item) => revealObserver.observe(item));
+    } else {
+      revealItems.forEach((item) => item.classList.add("is-visible"));
+    }
+
+    // --- Hero Carousel Controller ---
+    const carousel = document.querySelector("[data-hero-carousel]");
+    const tracks = Array.from(document.querySelectorAll("[data-hero-progress] .progress-track"));
+    const slides = carousel ? Array.from(carousel.querySelectorAll(".hero-slide")) : [];
+    
+    if (slides.length > 0 && tracks.length > 0) {
+      let activeIndex = 0;
+      let timer = null;
+      const slideDuration = 5500; // 5.5s
+
+      const resetTracks = () => {
+        tracks.forEach(track => {
+          track.classList.remove("is-active", "is-completed");
+        });
+      };
+
+      const heroContent = document.querySelector(".hero-content");
+
+      const showSlide = (index) => {
+        if (activeIndex === index && timer) return;
+        
+        slides[activeIndex].classList.remove("is-active");
+        slides[index].classList.add("is-active");
+        
+        if (heroContent) {
+          heroContent.classList.remove("is-active");
+          setTimeout(function() {
+            heroContent.classList.add("is-active");
+          }, 220);
+        }
+        
+        resetTracks();
+        
+        for (let i = 0; i < index; i++) {
+          tracks[i].classList.add("is-completed");
+        }
+        
+        tracks[index].classList.add("is-active");
+        
+        activeIndex = index;
+        
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          const nextIndex = (activeIndex + 1) % slides.length;
+          showSlide(nextIndex);
+        }, slideDuration);
+      };
+
+      if (heroContent) {
+        heroContent.classList.add("is-active");
+      }
+      tracks[0].classList.add("is-active");
+      timer = setTimeout(() => {
+        showSlide(1);
+      }, slideDuration);
+
+      tracks.forEach((track, index) => {
+        track.addEventListener("click", () => {
+          showSlide(index);
+        });
+      });
+
+      // 绑定左右手动切换箭头事件
+      const prevBtn = document.getElementById("hero-prev");
+      const nextBtn = document.getElementById("hero-next");
+      if (prevBtn) {
+        prevBtn.addEventListener("click", () => {
+          const prevIndex = (activeIndex - 1 + slides.length) % slides.length;
+          showSlide(prevIndex);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener("click", () => {
+          const nextIndex = (activeIndex + 1) % slides.length;
+          showSlide(nextIndex);
+        });
+      }
+    }
+
+    // --- Mobile Navigation Drawer Controller ---
+    const mobileMenuToggle = document.getElementById("mobile-menu-toggle");
+    const mobileNavPanel = document.getElementById("mobile-nav-panel");
+    const header = document.querySelector(".site-header");
+    const iconMenu = mobileMenuToggle?.querySelector(".icon-menu");
+    const iconClose = mobileMenuToggle?.querySelector(".icon-close");
+
+    if (mobileMenuToggle && mobileNavPanel && header) {
+      const toggleMenu = () => {
+        const isOpen = header.classList.toggle("menu-open");
+        if (iconMenu && iconClose) {
+          if (isOpen) {
+            iconMenu.style.display = "none";
+            iconClose.style.display = "block";
+            mobileNavPanel.style.height = `${mobileNavPanel.scrollHeight}px`;
+          } else {
+            iconMenu.style.display = "block";
+            iconClose.style.display = "none";
+            mobileNavPanel.style.height = "0";
+          }
+        }
+      };
+
+      mobileMenuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        toggleMenu();
+      });
+
+      // 点击菜单内的链接时自动收起
+      const mobileLinks = mobileNavPanel.querySelectorAll("a");
+      mobileLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (header.classList.contains("menu-open")) {
+            toggleMenu();
+          }
+        });
+      });
+
+      // 点击页面其它空白区域自动收起
+      document.addEventListener("click", (e) => {
+        if (header.classList.contains("menu-open") && !header.contains(e.target)) {
+          toggleMenu();
+        }
+      });
+    }
+
+    // --- Processing Marquee Controller ---
+    const marquee = document.querySelector(".processing-marquee") as HTMLElement | null;
+    const marqueeTrack = marquee ? marquee.querySelector(".marquee-track") as HTMLElement | null : null;
+    const marqueeSets = marqueeTrack ? marqueeTrack.querySelectorAll(".marquee-set") : [];
+    const firstSet = marqueeSets[0] as HTMLElement | null;
+    const secondSet = marqueeSets[1] as HTMLElement | null;
+    const marqueeSet = firstSet;
+
+    if (marquee && marqueeTrack && marqueeSet) {
+      let isDown = false;
+      let startX: number;
+      let scrollLeftVal: number;
+      let animationFrameId: number | null = null;
+      let speed = 0.2; // 滚动的基本速度
+      let isPaused = false;
+      let scrollAccumulator = marquee.scrollLeft;
+
+      // 自动循环滚动函数
+      const autoScroll = () => {
+        if (!isPaused && !isDown) {
+          scrollAccumulator += speed;
+          marquee.scrollLeft = scrollAccumulator;
+          
+          const limit = secondSet ? secondSet.offsetLeft : marqueeSet.offsetWidth;
+          
+          // 当滚动超过折返点时，瞬间折返回 0
+          if (scrollAccumulator >= limit) {
+            scrollAccumulator = 0;
+            marquee.scrollLeft = 0;
+          }
+        }
+        animationFrameId = requestAnimationFrame(autoScroll);
+      };
+
+      // 启动自动滚动
+      autoScroll();
+
+      // 鼠标按下：准备拖动
+      marquee.addEventListener("mousedown", (e: MouseEvent) => {
+        isDown = true;
+        isPaused = true; // 拖动时必须暂停自动滚动
+        startX = e.pageX - marquee.offsetLeft;
+        scrollLeftVal = marquee.scrollLeft;
+        scrollAccumulator = marquee.scrollLeft; // 同步累加器
+      });
+
+      // 鼠标移出：结束拖动，恢复自动滚动
+      marquee.addEventListener("mouseleave", () => {
+        if (isDown) {
+          isDown = false;
+          isPaused = false;
+          scrollAccumulator = marquee.scrollLeft; // 同步累加器
+        }
+      });
+
+      // 鼠标松开：结束拖动，恢复自动滚动
+      marquee.addEventListener("mouseup", () => {
+        if (isDown) {
+          isDown = false;
+          isPaused = false;
+          scrollAccumulator = marquee.scrollLeft; // 同步累加器
+        }
+      });
+
+      // 鼠标拖拽平移滚动逻辑
+      marquee.addEventListener("mousemove", (e: MouseEvent) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - marquee.offsetLeft;
+        const walk = (x - startX) * 1.5; // 位移乘数，决定拖拽的灵敏度
+        marquee.scrollLeft = scrollLeftVal - walk;
+        scrollAccumulator = marquee.scrollLeft; // 同步累加器
+
+        // 边界循环处理，防止拖拽越界
+        const limit = secondSet ? secondSet.offsetLeft : marqueeSet.offsetWidth;
+        if (marquee.scrollLeft >= limit) {
+          marquee.scrollLeft = 0;
+          scrollAccumulator = 0;
+          startX = e.pageX - marquee.offsetLeft; // 重新定位坐标系，防止拖拽时跳动
+          scrollLeftVal = 0;
+        } else if (marquee.scrollLeft <= 0) {
+          marquee.scrollLeft = limit;
+          scrollAccumulator = limit;
+          startX = e.pageX - marquee.offsetLeft;
+          scrollLeftVal = limit;
+        }
+      });
+
+      // 手机端触控：按下（touchstart）时暂停自动滚动，移开（touchend）时恢复自动滚动
+      marquee.addEventListener("touchstart", () => {
+        isPaused = true;
+        scrollAccumulator = marquee.scrollLeft; // 同步累加器
+      }, { passive: true });
+
+      marquee.addEventListener("touchend", () => {
+        isPaused = false;
+        scrollAccumulator = marquee.scrollLeft; // 同步累加器
+      }, { passive: true });
+
+      // 原生滚动时进行越界判定
+      marquee.addEventListener("scroll", () => {
+        scrollAccumulator = marquee.scrollLeft; // 原生滚动时同步累加器
+        const limit = secondSet ? secondSet.offsetLeft : marqueeSet.offsetWidth;
+        if (marquee.scrollLeft >= limit) {
+          marquee.scrollLeft = 0;
+          scrollAccumulator = 0;
+        } else if (marquee.scrollLeft <= 0) {
+          marquee.scrollLeft = limit;
+          scrollAccumulator = limit;
+        }
+      }, { passive: true });
+    }
+  </script>
+
+  <!-- 6. 全屏大图灯箱 Lightbox（提顶至 Section 外部以脱离层叠上下文） -->
+  <div class="catalog-lightbox" id="catalog-lightbox" aria-hidden="true">
+    <div class="lightbox-top-bar">
+      <button type="button" class="lightbox-close" id="lightbox-close" aria-label={content.catalogCloseText}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>
+    </div>
+    <button type="button" class="lightbox-arrow lightbox-prev" id="lightbox-prev" aria-label="前へ">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="" />
+      <div class="lightbox-footer">
+        <span class="lightbox-caption" id="lightbox-caption"></span>
+        <div class="lightbox-action-buttons">
+          <a href="" download id="lightbox-download-page" class="catalog-action-mini-btn is-on-lightbox" title={content.locale === "zh" ? "下载当前页" : content.locale === "ja" ? "当ページを保存" : "Download Current Page"}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+            <span>{content.locale === "zh" ? "下载当页" : content.locale === "ja" ? "当ページ保存" : "Download Page"}</span>
+          </a>
+          <a href={content.totalCatalogDownloadHref} download id="lightbox-download-full" class="catalog-action-mini-btn is-on-lightbox" title={content.locale === "zh" ? "下载完整图册PDF" : content.locale === "ja" ? "完全版PDFを保存" : "Download Full PDF"}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v4a2 2 0 0 1-2 2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-4a2 2 0 0 1-2-2V2"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>
+            <span>{content.locale === "zh" ? "完整PDF" : content.locale === "ja" ? "完全版PDF" : "Full PDF"}</span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <button type="button" class="lightbox-arrow lightbox-next" id="lightbox-next" aria-label="次へ">
+      <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+  </div>
+
+  <script define:vars={{
+    productsPages,
+    pagesImages,
+    namesPages,
+    catalogImageBase: imagesConfig.catalogImageBase
+  }}>
+    // --- Catalog Search Controller ---
+    (function() {
+      const productsMap = productsPages;
+      const pagesMap = pagesImages;
+      const namePageMap = namesPages;
+      const allNameKeys = Object.keys(namePageMap);
+      const allProductKeys = Object.keys(productsMap);
+      const IMAGE_BASE = catalogImageBase;
+      const HISTORY_KEY = 'sinoco_search_history';
+
+      // 公共函数：更新清除按钮显示状态
+      function updateClearButton(input, clearBtn) {
+        if (!input || !clearBtn) return;
+        var val = input.value.trim();
+        if (val) {
+          clearBtn.classList.remove('is-hidden');
+        } else {
+          clearBtn.classList.add('is-hidden');
+        }
+      }
+
+      // 公共函数：清除输入框内容
+      function clearSearchInput(input, clearBtn, acList) {
+        if (!input) return;
+        input.value = '';
+        if (clearBtn) clearBtn.classList.add('is-hidden');
+        input.focus();
+        if (acList) acList.classList.remove('is-visible');
+      }
+
+      // 公共函数：设置搜索框值并同步清除按钮
+      function setSearchInputValue(input, clearBtn, value) {
+        if (!input) return;
+        input.value = value;
+        updateClearButton(input, clearBtn);
+      }
+
+      // 提取唯一图片列表及代表页码字典，用以进行无限循环翻页与一图双页跳过
+      const uniqueImages = [];
+      const imageToRepresentPage = {};
+      const seenImgs = {};
+      for (var p = 1; p <= 350; p++) {
+        var img = pagesMap[p];
+        if (img) {
+          if (!seenImgs[img]) {
+            uniqueImages.push(img);
+            seenImgs[img] = true;
+            imageToRepresentPage[img] = p;
+          }
+        }
+      }
+
+      // 归一化函数（产品编号用）
+      function normalize(str) {
+        return str.toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/O/g, '0').replace(/I/g, '1');
+      }
+
+      // 罗马字→片假名映射表
+      var R2K = {
+        'a':'ア','i':'イ','u':'ウ','e':'エ','o':'オ',
+        'ka':'カ','ki':'キ','ku':'ク','ke':'ケ','ko':'コ',
+        'sa':'サ','si':'シ','shi':'シ','su':'ス','se':'セ','so':'ソ',
+        'ta':'タ','ti':'チ','chi':'チ','tu':'ツ','tsu':'ツ','te':'テ','to':'ト',
+        'na':'ナ','ni':'ニ','nu':'ヌ','ne':'ネ','no':'ノ',
+        'ha':'ハ','hi':'ヒ','hu':'フ','fu':'フ','he':'ヘ','ho':'ホ',
+        'ma':'マ','mi':'ミ','mu':'ム','me':'メ','mo':'モ',
+        'ya':'ヤ','yu':'ユ','yo':'ヨ',
+        'ra':'ラ','ri':'リ','ru':'ル','re':'レ','ro':'ロ',
+        'wa':'ワ','wi':'ウィ','we':'ウェ','wo':'ヲ','n':'ン',
+        'ga':'ガ','gi':'ギ','gu':'グ','ge':'ゲ','go':'ゴ',
+        'za':'ザ','zi':'ジ','ji':'ジ','zu':'ズ','ze':'ゼ','zo':'ゾ',
+        'da':'ダ','di':'ヂ','du':'ヅ','de':'デ','do':'ド',
+        'ba':'バ','bi':'ビ','bu':'ブ','be':'ベ','bo':'ボ',
+        'pa':'パ','pi':'ピ','pu':'プ','pe':'ペ','po':'ポ',
+        'kya':'キャ','kyu':'キュ','kyo':'キョ',
+        'sha':'シャ','shu':'シュ','sho':'ショ',
+        'cha':'チャ','chu':'チュ','cho':'チョ',
+        'nya':'ニャ','nyu':'ニュ','nyo':'ニョ',
+        'rya':'リャ','ryu':'リュ','ryo':'リョ',
+        'gya':'ギャ','gyu':'ギュ','gyo':'ギョ',
+        'ja':'ジャ','ju':'ジュ','jo':'ジョ',
+        'bya':'ビャ','byu':'ビュ','byo':'ビョ',
+        'pya':'ピャ','pyu':'ピュ','pyo':'ピョ',
+        'nn':'ン','xx':'ッ'
+      };
+
+      // 日文名归一化：罗马字/平假名/片假名 → 统一片假名形式，去噪
+      function kanaNormalize(str) {
+        var s = str.toLowerCase();
+        var result = '';
+        var i = 0;
+        while (i < s.length) {
+          var ch = s.charCodeAt(i);
+          // 平假名 → 片假名（Unicode 偏移 +0x60）
+          if (ch >= 0x3041 && ch <= 0x3096) {
+            result += String.fromCharCode(ch + 0x60);
+            i++;
+            continue;
+          }
+          // 已是片假名或半角片假名 → 直接保留
+          if ((ch >= 0x30A1 && ch <= 0x30F6) || (ch >= 0xFF65 && ch <= 0xFF9F)) {
+            result += String.fromCharCode(ch);
+            i++;
+            continue;
+          }
+          // 长音符 ー → 跳过（归一化时去掉）
+          if (ch === 0x30FC) { i++; continue; }
+          // 罗马字：贪心最长匹配（3→2→1 字符）
+          var matched = false;
+          for (var len = 3; len >= 2; len--) {
+            var chunk = s.substring(i, i + len);
+            if (R2K[chunk]) { result += R2K[chunk]; i += len; matched = true; break; }
+          }
+          if (matched) continue;
+          // 单字母 a-i-o-u
+          var one = s[i];
+          if (R2K[one]) { result += R2K[one]; i++; continue; }
+          // 跳过空格、中点、连字符等噪声字符
+          i++;
+        }
+        return result;
+      }
+
+      // 预计算：所有日文名的归一化形式 → 原始名
+      var nameNormMap = {};
+      allNameKeys.forEach(function(key) {
+        nameNormMap[kanaNormalize(key)] = key;
+      });
+      var allNameNormKeys = Object.keys(nameNormMap);
+
+      // 归一化索引
+      const normalizedMap = {};
+      allProductKeys.forEach(function(key) {
+        normalizedMap[normalize(key)] = key;
+      });
+
+      // 根据页码反向查找型号，获得美化 Label
+      function getLabelForPage(pageNum) {
+        return 'P.' + pageNum;
+      }
+
+      // 查找图片
+      function findImage(query) {
+        if (!query) return null;
+        var q = query.trim();
+        // 页码匹配
+        var pageMatch = q.match(/^(?:P|p|PAGE|page)?[\.\-]?\s*(\d+)$/i);
+        if (pageMatch) {
+          var pageNum = parseInt(pageMatch[1], 10);
+          var img = pagesMap[pageNum];
+          return img ? { image: img, label: 'P.' + pageNum } : null;
+        }
+        // 型号匹配
+        var upper = q.toUpperCase();
+        var page = productsMap[upper];
+        if (page !== undefined) {
+          var img2 = pagesMap[page];
+          return img2 ? { image: img2, label: upper + ' → P.' + page } : null;
+        }
+        // 归一化匹配
+        var normQ = normalize(q);
+        var realKey = normalizedMap[normQ];
+        if (realKey) {
+          page = productsMap[realKey];
+          if (page !== undefined) {
+            var img3 = pagesMap[page];
+            return img3 ? { image: img3, label: realKey + ' → P.' + page } : null;
+          }
+        }
+        // 日文名精确匹配
+        var normName = kanaNormalize(q);
+        var matchedNameKey = nameNormMap[normName];
+        if (matchedNameKey) {
+          var namePage = namePageMap[matchedNameKey];
+          if (namePage !== undefined) {
+            var imgName = pagesMap[namePage];
+            return imgName ? { image: imgName, label: matchedNameKey + ' → P.' + namePage } : null;
+          }
+        }
+        return null;
+      }
+
+      // 联想匹配（带页码直达置顶）
+      function getSuggestions(input) {
+        if (!input || input.length < 1) return [];
+        var q = input.trim();
+        var upper = q.toUpperCase();
+        var results = [];
+        var seen = {};
+
+        // 1. 纯数字或以P开头带数字强行置顶为“页码直达”
+        var pageMatch = q.match(/^(?:P|p|PAGE|page)?[\.\-]?\s*(\d+)$/i);
+        if (pageMatch) {
+          var pageNum = parseInt(pageMatch[1], 10);
+          if (pagesMap[pageNum]) {
+            var pageKey = "PAGE_" + pageNum;
+            var directLabel = acList ? acList.getAttribute('data-direct-label') : '页 (直达)';
+            results.push({
+              key: pageKey,
+              type: 'page',
+              value: pageNum,
+              label: 'P.' + pageNum,
+              subLabel: pageNum + ' ' + directLabel
+            });
+            seen[pageKey] = true;
+          }
+        }
+
+        // 2. 前缀型号匹配
+        for (var i = 0; i < allProductKeys.length && results.length < 5; i++) {
+          var key = allProductKeys[i];
+          if (key.toUpperCase().indexOf(upper) === 0 && !seen[key]) {
+            results.push({
+              key: key,
+              type: 'product',
+              value: key,
+              label: key,
+              subLabel: 'P.' + productsMap[key]
+            });
+            seen[key] = true;
+          }
+        }
+
+        // 3. 子串型号匹配
+        for (var j = 0; j < allProductKeys.length && results.length < 5; j++) {
+          var key2 = allProductKeys[j];
+          if (!seen[key2] && key2.toUpperCase().indexOf(upper) > 0) {
+            results.push({
+              key: key2,
+              type: 'product',
+              value: key2,
+              label: key2,
+              subLabel: 'P.' + productsMap[key2]
+            });
+            seen[key2] = true;
+          }
+        }
+
+        // 4. 日文名匹配（前缀 + 子串）
+        var normInput = kanaNormalize(q);
+        if (normInput.length > 0) {
+          for (var k = 0; k < allNameNormKeys.length && results.length < 5; k++) {
+            var nKey = allNameNormKeys[k];
+            var origName = nameNormMap[nKey];
+            if (seen[origName]) continue;
+            if (nKey.indexOf(normInput) === 0 || nKey.indexOf(normInput) > 0) {
+              results.push({
+                key: origName,
+                type: 'name',
+                value: origName,
+                label: origName,
+                subLabel: 'P.' + namePageMap[origName]
+              });
+              seen[origName] = true;
+            }
+          }
+        }
+
+        return results.slice(0, 5);
+      }
+
+      // DOM Elements
+      var searchInput = document.getElementById('catalog-search-input');
+      var searchBtn = document.getElementById('catalog-search-btn');
+      var acList = document.getElementById('search-autocomplete-list');
+      var drawer = document.getElementById('catalog-drawer');
+      var drawerImg = document.getElementById('catalog-drawer-img');
+      var drawerTitle = document.getElementById('catalog-drawer-title');
+      var historyTagsContainer = document.getElementById('search-history-tags');
+
+      // 全屏 Lightbox 灯箱 DOM
+      var lightbox = document.getElementById('catalog-lightbox');
+      var lightboxImg = document.getElementById('lightbox-img');
+      var lightboxCaption = document.getElementById('lightbox-caption');
+      var lightboxClose = document.getElementById('lightbox-close');
+      var lightboxPrev = document.getElementById('lightbox-prev');
+      var lightboxNext = document.getElementById('lightbox-next');
+
+      var activePageNum = null;
+
+      // --- LocalStorage 搜索历史管理 ---
+      function loadHistory() {
+        try {
+          var historyStr = localStorage.getItem(HISTORY_KEY);
+          return historyStr ? JSON.parse(historyStr) : [];
+        } catch(e) {
+          return [];
+        }
+      }
+
+      function saveHistory(query) {
+        if (!query) return;
+        var q = query.trim();
+        var history = loadHistory();
+        // 过滤重复项 (不区分大小写)
+        history = history.filter(function(item) {
+          return item.toLowerCase() !== q.toLowerCase();
+        });
+        history.unshift(q);
+        if (history.length > 5) {
+          history = history.slice(0, 5);
+        }
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        renderHistory();
+      }
+
+      function deleteHistory(query) {
+        var history = loadHistory();
+        history = history.filter(function(item) {
+          return item !== query;
+        });
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+        renderHistory();
+      }
+
+      function renderHistory() {
+        if (!historyTagsContainer) return;
+        var history = loadHistory();
+        if (history.length === 0) {
+          historyTagsContainer.innerHTML = '';
+          historyTagsContainer.style.display = 'none';
+          return;
+        }
+        var recentLabel = historyTagsContainer.getAttribute('data-recent-label') || '最近の検索:';
+        historyTagsContainer.style.display = 'flex';
+        historyTagsContainer.innerHTML = '<span class="history-tag-label">' + recentLabel + '</span>' + 
+          history.map(function(q) {
+            return '<span class="history-tag" data-query="' + q + '">' +
+              '<span class="history-tag-text">' + q + '</span>' +
+              '<button type="button" class="history-tag-del" data-del="' + q + '" aria-label="Delete">×</button>' +
+              '</span>';
+          }).join('');
+      }
+
+      // 绑定历史标签点击事件委托
+      if (historyTagsContainer) {
+        historyTagsContainer.addEventListener('click', function(e) {
+          var delBtn = e.target.closest('.history-tag-del');
+          if (delBtn) {
+            e.stopPropagation();
+            var val = delBtn.getAttribute('data-del');
+            deleteHistory(val);
+            return;
+          }
+          var tag = e.target.closest('.history-tag');
+          if (tag) {
+            var q = tag.getAttribute('data-query');
+            setSearchInputValue(searchInput, catalogClearBtn, q);
+            doSearch(q);
+          }
+        });
+      }
+
+      // 初始化渲染历史记录
+      renderHistory();
+
+      // 渲染联想列表
+      function showAutocomplete(items) {
+        if (!items.length) {
+          acList.classList.remove('is-visible');
+          return;
+        }
+        acList.innerHTML = items.map(function(item) {
+          if (item.type === 'page') {
+            return '<button type="button" class="ac-item is-page-item" role="option" data-type="page" data-value="' + item.value + '">'
+              + '<span class="ac-item-code"><svg class="page-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px;opacity:0.8"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h10"/></svg>' + item.subLabel + '</span>'
+              + '<span class="ac-item-page">' + item.label + '</span>'
+              + '</button>';
+          } else if (item.type === 'name') {
+            return '<button type="button" class="ac-item ac-item-name" role="option" data-type="name" data-value="' + item.value + '">'
+              + '<span class="ac-item-code">' + item.label + '</span>'
+              + '<span class="ac-item-page">' + item.subLabel + '</span>'
+              + '</button>';
+          } else {
+            return '<button type="button" class="ac-item" role="option" data-type="product" data-value="' + item.value + '">'
+              + '<span class="ac-item-code">' + item.label + '</span>'
+              + '<span class="ac-item-page">' + item.subLabel + '</span>'
+              + '</button>';
+          }
+        }).join('');
+        acList.classList.add('is-visible');
+      }
+
+      // --- 通用切页/双向状态同步逻辑 ---
+      function switchPage(targetPage) {
+        if (!pagesMap[targetPage]) return; // 越界保护
+        
+        activePageNum = targetPage;
+        var imgFile = pagesMap[targetPage];
+        var label = getLabelForPage(targetPage);
+        var fullImgUrl = IMAGE_BASE + imgFile;
+
+        // 1. 同步刷新嵌入式网页抽屉大图与标题
+        if (drawerImg) {
+          drawerImg.src = fullImgUrl;
+          drawerImg.alt = label;
+        }
+        if (drawerTitle) {
+          drawerTitle.textContent = label;
+        }
+
+        // 动态更新抽屉内“下载当页”的链接
+        var drawerDlBtn = document.getElementById('drawer-download-page');
+        if (drawerDlBtn) {
+          drawerDlBtn.href = fullImgUrl;
+          drawerDlBtn.setAttribute('download', 'harborlink-catalog-' + label.replace(/\s+/g, '') + '.jpg');
+        }
+
+        // 2. 刷新灯箱（如果灯箱是打开的）
+        if (lightbox && lightbox.classList.contains('is-open')) {
+          if (lightboxImg) lightboxImg.src = fullImgUrl;
+          if (lightboxCaption) lightboxCaption.textContent = label;
+          resetZoom(); // 翻页时彻底复位缩放与位移
+        }
+
+        // 动态更新灯箱内“下载当页”的链接
+        var lightboxDlBtn = document.getElementById('lightbox-download-page');
+        if (lightboxDlBtn) {
+          lightboxDlBtn.href = fullImgUrl;
+          lightboxDlBtn.setAttribute('download', 'harborlink-catalog-' + label.replace(/\s+/g, '') + '.jpg');
+        }
+
+        // 3. 控制内嵌抽屉两侧箭头的显示/隐藏 (常驻显示，实现无限循环翻页)
+        var drawerPrev = document.getElementById('drawer-prev');
+        var drawerNext = document.getElementById('drawer-next');
+        if (drawerPrev) drawerPrev.style.display = 'flex';
+        if (drawerNext) drawerNext.style.display = 'flex';
+
+        // 4. 控制灯箱两侧箭头的显示/隐藏 (常驻显示)
+        if (lightboxPrev) lightboxPrev.style.display = 'flex';
+        if (lightboxNext) lightboxNext.style.display = 'flex';
+
+        // 5. 同步更新图书卡片 Spotlight 聚焦
+        document.querySelectorAll('.catalog-card').forEach(function(card) {
+          card.classList.remove('is-active-trigger');
+        });
+      }
+
+      // --- 唯一图片无限循环切换核心算法 ---
+      function switchNext() {
+        if (activePageNum === null) return;
+        var currentImg = pagesMap[activePageNum];
+        if (!currentImg) return;
+        var idx = uniqueImages.indexOf(currentImg);
+        if (idx !== -1) {
+          var nextIdx = (idx + 1) % uniqueImages.length;
+          var nextImg = uniqueImages[nextIdx];
+          var nextPage = imageToRepresentPage[nextImg];
+          switchPage(nextPage);
+        }
+      }
+
+      function switchPrev() {
+        if (activePageNum === null) return;
+        var currentImg = pagesMap[activePageNum];
+        if (!currentImg) return;
+        var idx = uniqueImages.indexOf(currentImg);
+        if (idx !== -1) {
+          var prevIdx = (idx - 1 + uniqueImages.length) % uniqueImages.length;
+          var prevImg = uniqueImages[prevIdx];
+          var prevPage = imageToRepresentPage[prevImg];
+          switchPage(prevPage);
+        }
+      }
+
+      // 打开网页内嵌大图展示抽屉
+      function openDrawer(result) {
+        var containerBox = document.querySelector('.catalog-layout-single');
+        var body = drawer.querySelector('.catalog-drawer-body');
+        
+        // 智能获取关联的图书卷册，做 Spotlight 精准点亮与页码初始化
+        var targetPage = null;
+        var pageMatch = result.label.match(/^P\.(\d+)/);
+        if (pageMatch) {
+          targetPage = parseInt(pageMatch[1], 10);
+        } else {
+          var matchedPage = result.label.split('P.')[1];
+          if (matchedPage) targetPage = parseInt(matchedPage, 10);
+        }
+
+        if (containerBox) containerBox.classList.add('has-active-drawer');
+        if (body) body.classList.remove('is-loaded');
+
+        drawerImg.onload = function() {
+          if (body) body.classList.add('is-loaded');
+        };
+
+        drawer.classList.add('is-open');
+        drawer.focus({ preventScroll: true }); // 固定焦点
+
+        // 初始化页码和相关按钮与高亮状态
+        if (targetPage !== null) {
+          switchPage(targetPage);
+        }
+
+        setTimeout(function() {
+          drawer.scrollIntoView({ behavior: 'smooth', block: 'center' }); // 置于画面中央
+        }, 150);
+      }
+
+      // 关闭抽屉
+      function closeDrawer() {
+        var containerBox = document.querySelector('.catalog-layout-single');
+        if (containerBox) containerBox.classList.remove('has-active-drawer');
+        document.querySelectorAll('.catalog-card').forEach(function(card) {
+          card.classList.remove('is-active-trigger');
+        });
+
+        drawer.classList.remove('is-open');
+
+        // 还原焦点
+        var catalogEl = document.getElementById('catalog');
+        if (catalogEl) {
+          catalogEl.focus({ preventScroll: true });
+        }
+        // 更新 URL 锚点
+        try {
+          var newUrl = window.location.pathname + window.location.search + '#catalog';
+          window.history.pushState(null, '', newUrl);
+        } catch (e) {
+          window.location.hash = 'catalog';
+        }
+
+        // 延迟清空大图防折叠闪烁
+        setTimeout(function() {
+          if (!drawer.classList.contains('is-open')) {
+            drawerImg.src = '';
+            var body = drawer.querySelector('.catalog-drawer-body');
+            if (body) body.classList.remove('is-loaded');
+            var drawerPrev = document.getElementById('drawer-prev');
+            var drawerNext = document.getElementById('drawer-next');
+            if (drawerPrev) drawerPrev.style.display = 'none';
+            if (drawerNext) drawerNext.style.display = 'none';
+          }
+        }, 650);
+      }
+
+      // 执行搜索 (集成检索微动效与历史保存)
+      function doSearch(query) {
+        var result = findImage(query);
+        if (result) {
+          searchInput.classList.remove('has-error');
+          var wrap = document.querySelector('.catalog-search-input-wrap');
+          
+          // 激活输入框和按钮的检索加载动效
+          if (searchBtn) searchBtn.classList.add('is-loading');
+          if (wrap) wrap.classList.add('is-searching');
+
+          // 保存至搜索历史
+          saveHistory(query);
+
+          // 保持 350ms 的动效表达，随后优雅过渡至大图
+          setTimeout(function() {
+            if (searchBtn) searchBtn.classList.remove('is-loading');
+            if (wrap) wrap.classList.remove('is-searching');
+            openDrawer(result);
+          }, 350);
+        } else {
+          searchInput.classList.add('has-error');
+          searchInput.focus();
+          setTimeout(function() { searchInput.classList.remove('has-error'); }, 1200);
+        }
+        acList.classList.remove('is-visible');
+      }
+
+      // --- 全屏 Lightbox 灯箱高级控制（防遮挡、无级缩放与拖拽平移） ---
+      var zoomScale = 1;
+      var zoomTranslateX = 0;
+      var zoomTranslateY = 0;
+      var isDragging = false;
+      var startX = 0;
+      var startY = 0;
+
+      function resetZoom() {
+        zoomScale = 1;
+        zoomTranslateX = 0;
+        zoomTranslateY = 0;
+        if (lightboxImg) {
+          lightboxImg.style.transition = 'transform 0.25s ease-out';
+          applyZoomTransform();
+        }
+      }
+
+      function applyZoomTransform() {
+        if (lightboxImg) {
+          lightboxImg.style.transform = 'translate(' + zoomTranslateX + 'px, ' + zoomTranslateY + 'px) scale(' + zoomScale + ')';
+        }
+      }
+
+      function openLightbox() {
+        if (!lightbox || !drawerImg.src) return;
+        
+        // 解析当前页码
+        var label = drawerTitle.textContent;
+        var pageMatch = label.match(/P\.(\d+)/);
+        if (pageMatch) {
+          activePageNum = parseInt(pageMatch[1], 10);
+        } else {
+          activePageNum = 1;
+        }
+
+        lightboxImg.src = drawerImg.src;
+        lightboxCaption.textContent = label;
+        
+        lightbox.classList.add('is-open');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden'; // 阻止底层滚动
+
+        // 开启时物理重置，防止继承旧缩放状态
+        resetZoom();
+      }
+
+      function closeLightbox() {
+        if (!lightbox) return;
+        lightbox.classList.remove('is-open');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        
+        resetZoom(); // 关闭时物理复位
+
+        // 还原焦点
+        var catalogEl = document.getElementById('catalog');
+        if (catalogEl) {
+          catalogEl.focus({ preventScroll: true });
+        }
+        // 更新 URL 锚点
+        try {
+          var newUrl = window.location.pathname + window.location.search + '#catalog';
+          window.history.pushState(null, '', newUrl);
+        } catch (e) {
+          window.location.hash = 'catalog';
+        }
+
+        // 延迟清空防闪烁
+        setTimeout(function() {
+          if (!lightbox.classList.contains('is-open')) {
+            lightboxImg.src = '';
+            lightboxCaption.textContent = '';
+          }
+        }, 400);
+      }
+
+      // 绑定内嵌大图点击弹出灯箱
+      if (drawerImg) {
+        drawerImg.style.cursor = 'zoom-in';
+        drawerImg.addEventListener('click', openLightbox);
+      }
+
+      // 绑定内嵌大图左右翻页按钮 (阻止冒泡)
+      var drawerPrevBtn = document.getElementById('drawer-prev');
+      var drawerNextBtn = document.getElementById('drawer-next');
+
+      if (drawerPrevBtn) {
+        drawerPrevBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchPrev();
+        });
+      }
+
+      if (drawerNextBtn) {
+        drawerNextBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchNext();
+        });
+      }
+
+      // 灯箱交互事件绑定
+      if (lightboxClose) {
+        lightboxClose.addEventListener('click', closeLightbox);
+      }
+
+      if (lightboxPrev) {
+        lightboxPrev.addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchPrev();
+        });
+      }
+
+      if (lightboxNext) {
+        lightboxNext.addEventListener('click', function(e) {
+          e.stopPropagation();
+          switchNext();
+        });
+      }
+
+      // 灯箱图片无级滚轮缩放与鼠标拖拽平移
+      if (lightboxImg) {
+        lightboxImg.style.cursor = 'grab';
+        lightboxImg.style.userSelect = 'none';
+        lightboxImg.setAttribute('draggable', 'false'); // 禁用原生拖拽影子效果
+
+        // 滚轮缩放 (0.8x - 5.0x)
+        lightboxImg.addEventListener('wheel', function(e) {
+          e.preventDefault();
+          var zoomStep = 0.12;
+          var newScale;
+          if (e.deltaY < 0) {
+            newScale = zoomScale + zoomStep;
+          } else {
+            newScale = zoomScale - zoomStep;
+          }
+          newScale = Math.max(0.8, Math.min(5.0, newScale));
+
+          // 接近 1.0 时吸附物理重置，提升跟手和复位体验
+          if (Math.abs(newScale - 1) < 0.05) {
+            newScale = 1;
+            zoomTranslateX = 0;
+            zoomTranslateY = 0;
+          }
+
+          zoomScale = newScale;
+          lightboxImg.style.transition = 'transform 0.15s ease-out';
+          applyZoomTransform();
+        }, { passive: false });
+
+        // 鼠标拖拽平移
+        lightboxImg.addEventListener('mousedown', function(e) {
+          if (e.button !== 0) return; // 仅允许左键
+          e.preventDefault();
+          isDragging = true;
+          lightboxImg.style.cursor = 'grabbing';
+          lightboxImg.style.transition = 'none'; // 拖拽时必须禁用过渡动画，防止延迟粘滞
+          startX = e.clientX - zoomTranslateX;
+          startY = e.clientY - zoomTranslateY;
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (!isDragging) return;
+          zoomTranslateX = e.clientX - startX;
+          zoomTranslateY = e.clientY - startY;
+          applyZoomTransform();
+        });
+
+        var stopDrag = function() {
+          if (!isDragging) return;
+          isDragging = false;
+          if (lightboxImg) {
+            lightboxImg.style.cursor = 'grab';
+            lightboxImg.style.transition = 'transform 0.2s ease-out';
+          }
+        };
+
+        lightboxImg.addEventListener('mouseup', stopDrag);
+        lightboxImg.addEventListener('mouseleave', stopDrag);
+        document.addEventListener('mouseup', function() {
+          if (isDragging) stopDrag();
+        });
+      }
+
+      // 灯箱交互：点击左右区域翻页，点击背景关闭
+      if (lightbox) {
+        lightbox.addEventListener('click', function(e) {
+          // 点击箭头、图片、按钮、页码区域不处理
+          if (e.target.closest('.lightbox-arrow') || e.target.closest('#lightbox-img') || e.target.closest('.lightbox-footer') || e.target.closest('.lightbox-close')) {
+            return;
+          }
+          // 计算点击位置：左侧30%翻上页，右侧30%翻下页，中间40%关闭
+          var rect = lightbox.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var ratio = x / rect.width;
+          if (ratio < 0.3) {
+            switchPrev();
+          } else if (ratio > 0.7) {
+            switchNext();
+          } else {
+            closeLightbox();
+          }
+        });
+      }
+
+      // 监听键盘按键
+      document.addEventListener('keydown', function(e) {
+        if (lightbox && lightbox.classList.contains('is-open')) {
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            switchPrev();
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            switchNext();
+          } else if (e.key === 'Escape') {
+            closeLightbox();
+          }
+        }
+      });
+
+      // --- 网页空白区域收拢抽屉 ---
+      document.addEventListener('click', function(e) {
+        if (drawer.classList.contains('is-open')) {
+          // 如果点击不属于：搜索控制栏、抽屉大图内、三册图书、功能大按钮以及联想菜单
+          if (!e.target.closest('#catalog-search-bar') && 
+              !e.target.closest('#catalog-drawer') && 
+              !e.target.closest('.catalog-card') &&
+              !e.target.closest('.catalog-action-btn') &&
+              !e.target.closest('.header-search-wrap') &&
+              !e.target.closest('.product-card')) {
+            closeDrawer();
+          }
+        }
+      });
+
+      // 绑定键盘与点击事件
+      var catalogClearBtn = document.getElementById('catalog-search-clear');
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          var val = this.value.trim();
+          var suggestions = getSuggestions(val);
+          showAutocomplete(suggestions);
+          updateClearButton(searchInput, catalogClearBtn);
+        });
+
+        searchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            doSearch(this.value);
+          }
+          if (e.key === 'Escape') {
+            acList.classList.remove('is-visible');
+            // 如果输入框有内容，清除内容并隐藏清除按钮
+            if (searchInput.value.trim()) {
+              clearSearchInput(searchInput, catalogClearBtn, acList);
+            }
+          }
+        });
+
+        // 失去焦点时延迟隐藏清除按钮
+        searchInput.addEventListener('blur', function() {
+          setTimeout(function() {
+            if (!searchInput.value.trim()) {
+              updateClearButton(searchInput, catalogClearBtn);
+            }
+          }, 150);
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!e.target.closest('.catalog-search-input-wrap')) {
+            acList.classList.remove('is-visible');
+          }
+        });
+      }
+
+      if (searchBtn) {
+        searchBtn.addEventListener('click', function() {
+          doSearch(searchInput.value);
+        });
+      }
+
+      if (catalogClearBtn && searchInput) {
+        catalogClearBtn.addEventListener('click', function() {
+          clearSearchInput(searchInput, catalogClearBtn, acList);
+        });
+      }
+
+      if (acList) {
+        acList.addEventListener('click', function(e) {
+          var item = e.target.closest('.ac-item');
+          if (item) {
+            var val = item.getAttribute('data-value');
+            var type = item.getAttribute('data-type');
+            if (type === 'page') {
+              setSearchInputValue(searchInput, catalogClearBtn, 'P.' + val);
+            } else {
+              setSearchInputValue(searchInput, catalogClearBtn, val);
+            }
+            acList.classList.remove('is-visible');
+            doSearch(searchInput.value);
+          }
+        });
+      }
+
+      var quickTags = document.querySelectorAll('.quick-tag');
+      quickTags.forEach(function(tag) {
+        tag.addEventListener('click', function() {
+          var q = this.getAttribute('data-query');
+          setSearchInputValue(searchInput, catalogClearBtn, q);
+          doSearch(q);
+        });
+      });
+
+      // 产品卡片点击 → 直接打开灯箱（一段式，断冒泡+防抽屉冲击）
+      document.querySelectorAll('.product-card[data-page]').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          var page = parseInt(this.getAttribute('data-page'), 10);
+          if (!page || !pagesMap[String(page)] || !lightbox) {
+            console.warn('[product-card] bail: page=' + page + ' map=' + !!pagesMap[String(page)] + ' lb=' + !!lightbox);
+            return;
+          }
+          // 先行关闭抽屉，防止此前被其它代码打开
+          if (drawer && drawer.classList.contains('is-open')) closeDrawer();
+          activePageNum = page;
+          var imgFile = pagesMap[String(page)];
+          var fullImgUrl = IMAGE_BASE + imgFile;
+          var label = 'P.' + page;
+          lightboxImg.src = fullImgUrl;
+          lightboxCaption.textContent = label;
+          lightbox.classList.add('is-open');
+          lightbox.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          resetZoom();
+          console.log('[product-card] Lightbox opened for page ' + page);
+        });
+      });
+
+      // 工程案例卡片点击 → 直接打开灯箱（复用产品卡片逻辑）
+      document.querySelectorAll('.case-card[data-page]').forEach(function(card) {
+        card.addEventListener('click', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          var page = parseInt(this.getAttribute('data-page'), 10);
+          if (!page || !pagesMap[String(page)] || !lightbox) return;
+          if (drawer && drawer.classList.contains('is-open')) closeDrawer();
+          activePageNum = page;
+          var imgFile = pagesMap[String(page)];
+          var fullImgUrl = IMAGE_BASE + imgFile;
+          lightboxImg.src = fullImgUrl;
+          lightboxCaption.textContent = 'P.' + page;
+          lightbox.classList.add('is-open');
+          lightbox.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          resetZoom();
+        });
+      });
+
+      var drawerClose = document.getElementById('catalog-drawer-close');
+      if (drawerClose) {
+        drawerClose.addEventListener('click', closeDrawer);
+      }
+
+      // --- 工事实绩（无图业绩）折叠抽屉控制器 ---
+      var casesToggle = document.getElementById('cases-archive-toggle');
+      var casesDrawer = document.getElementById('cases-archive-drawer');
+      
+      function closeCasesDrawer() {
+        if (!casesDrawer || !casesDrawer.classList.contains('is-open')) return;
+        casesDrawer.classList.remove('is-open');
+        if (casesToggle) {
+          casesToggle.classList.remove('is-active');
+          casesToggle.setAttribute('aria-expanded', 'false');
+          var textSpan = casesToggle.querySelector('span');
+          if (textSpan) {
+            textSpan.innerText = casesToggle.getAttribute('data-text-expand');
+          }
+        }
+      }
+
+      if (casesToggle && casesDrawer) {
+        casesToggle.addEventListener('click', function(e) {
+          e.stopPropagation(); // 阻止事件冒泡到 document
+          var isOpen = casesDrawer.classList.toggle('is-open');
+          casesToggle.classList.toggle('is-active', isOpen);
+          casesToggle.setAttribute('aria-expanded', String(isOpen));
+          
+          var textSpan = casesToggle.querySelector('span');
+          if (textSpan) {
+            textSpan.innerText = isOpen 
+              ? casesToggle.getAttribute('data-text-collapse') 
+              : casesToggle.getAttribute('data-text-expand');
+          }
+
+          if (isOpen) {
+            // 平滑滚动定位，避开 Fixed Header
+            setTimeout(function() {
+              var rect = casesDrawer.getBoundingClientRect();
+              var absoluteTop = rect.top + window.pageYOffset;
+              window.scrollTo({
+                top: absoluteTop - 90,
+                behavior: 'smooth'
+              });
+              casesDrawer.focus();
+            }, 300);
+          }
+        });
+
+        // 点击抽屉外部收起
+        document.addEventListener('click', function(e) {
+          if (casesDrawer && casesDrawer.classList.contains('is-open')) {
+            var isClickInside = casesDrawer.contains(e.target) || casesToggle.contains(e.target);
+            if (!isClickInside) {
+              closeCasesDrawer();
+            }
+          }
+        });
+      }
+
+      // 3D 悬浮透视倾斜
+      document.querySelectorAll('.catalog-card').forEach(function(card) {
+        card.addEventListener('mousemove', function(e) {
+          var rect = card.getBoundingClientRect();
+          var x = e.clientX - rect.left;
+          var y = e.clientY - rect.top;
+          var xc = ((x / rect.width) - 0.5) * 2;
+          var yc = ((y / rect.height) - 0.5) * 2;
+          var maxRotate = 6;
+          card.style.setProperty('--rx', (-yc * maxRotate) + 'deg');
+          card.style.setProperty('--ry', (xc * maxRotate) + 'deg');
+        });
+        card.addEventListener('mouseleave', function() {
+          card.style.setProperty('--rx', '0deg');
+          card.style.setProperty('--ry', '0deg');
+        });
+      });
+
+      // --- Header 顶部精致小型搜索栏交互 (不记历史，直连灯箱) ---
+      var headerSearchInput = document.getElementById('header-search-input');
+      var headerSearchBtn = document.getElementById('header-search-btn');
+      var headerAcList = document.getElementById('header-search-autocomplete-list');
+      var headerClearBtn = document.getElementById('header-search-clear');
+
+      if (headerSearchInput) {
+        headerSearchInput.addEventListener('input', function() {
+          var val = this.value.trim();
+          var suggestions = getSuggestions(val);
+          showHeaderAutocomplete(suggestions);
+          updateClearButton(headerSearchInput, headerClearBtn);
+        });
+
+        headerSearchInput.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            doHeaderSearch(this.value.trim());
+          }
+          if (e.key === 'Escape') {
+            if (headerAcList) headerAcList.classList.remove('is-visible');
+            // 如果输入框有内容，清除内容并隐藏清除按钮
+            if (headerSearchInput.value.trim()) {
+              clearSearchInput(headerSearchInput, headerClearBtn, headerAcList);
+            }
+          }
+        });
+
+        // 失去焦点时延迟隐藏清除按钮
+        headerSearchInput.addEventListener('blur', function() {
+          setTimeout(function() {
+            if (!headerSearchInput.value.trim()) {
+              updateClearButton(headerSearchInput, headerClearBtn);
+            }
+          }, 150);
+        });
+
+        document.addEventListener('click', function(e) {
+          if (!e.target.closest('.header-search-wrap') && headerAcList) {
+            headerAcList.classList.remove('is-visible');
+          }
+        });
+      }
+
+      if (headerSearchBtn) {
+        headerSearchBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          if (headerSearchInput) {
+            doHeaderSearch(headerSearchInput.value.trim());
+          }
+        });
+      }
+
+      if (headerClearBtn && headerSearchInput) {
+        headerClearBtn.addEventListener('click', function() {
+          clearSearchInput(headerSearchInput, headerClearBtn, headerAcList);
+        });
+      }
+
+      if (headerAcList) {
+        headerAcList.addEventListener('click', function(e) {
+          var item = e.target.closest('.ac-item');
+          if (item) {
+            var val = item.getAttribute('data-value');
+            var type = item.getAttribute('data-type');
+            if (type === 'page') {
+              setSearchInputValue(headerSearchInput, headerClearBtn, 'P.' + val);
+            } else {
+              setSearchInputValue(headerSearchInput, headerClearBtn, val);
+            }
+            headerAcList.classList.remove('is-visible');
+            doHeaderSearch(headerSearchInput.value);
+          }
+        });
+      }
+
+      function showHeaderAutocomplete(items) {
+        if (!headerAcList) return;
+        if (!items.length) {
+          headerAcList.classList.remove('is-visible');
+          return;
+        }
+        headerAcList.innerHTML = items.map(function(item) {
+          if (item.type === 'page') {
+            return '<button type="button" class="ac-item is-page-item" role="option" data-type="page" data-value="' + item.value + '">'
+              + '<span class="ac-item-code"><svg class="page-icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="vertical-align:middle;margin-right:6px;opacity:0.8"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/><path d="M6 6h10M6 10h10M6 14h10"/></svg>' + item.subLabel + '</span>'
+              + '<span class="ac-item-page">' + item.label + '</span>'
+              + '</button>';
+          } else if (item.type === 'name') {
+            return '<button type="button" class="ac-item ac-item-name" role="option" data-type="name" data-value="' + item.value + '">'
+              + '<span class="ac-item-code">' + item.label + '</span>'
+              + '<span class="ac-item-page">' + item.subLabel + '</span>'
+              + '</button>';
+          } else {
+            return '<button type="button" class="ac-item" role="option" data-type="product" data-value="' + item.value + '">'
+              + '<span class="ac-item-code">' + item.label + '</span>'
+              + '<span class="ac-item-page">' + item.subLabel + '</span>'
+              + '</button>';
+          }
+        }).join('');
+        headerAcList.classList.add('is-visible');
+      }
+
+      function doHeaderSearch(query) {
+        if (!query) return;
+        var result = findImage(query);
+        if (result) {
+          headerSearchInput.classList.remove('has-error');
+          
+          var targetPage = null;
+          var pageMatch = result.label.match(/^P\.(\d+)/);
+          if (pageMatch) {
+            targetPage = parseInt(pageMatch[1], 10);
+          } else {
+            var matchedPage = result.label.split('P.')[1];
+            if (matchedPage) targetPage = parseInt(matchedPage, 10);
+          }
+
+          if (targetPage !== null) {
+            // 1. 同步刷新状态
+            switchPage(targetPage);
+            // 2. 刷新抽屉大图 (保证即使关掉灯箱，抽屉里也加载了这张图)
+            if (drawerImg) {
+              var imgFile = pagesMap[targetPage];
+              drawerImg.src = IMAGE_BASE + imgFile;
+              drawerImg.alt = getLabelForPage(targetPage);
+            }
+            // 3. 直接拉起灯箱大图！
+            openLightbox();
+          }
+        } else {
+          // 匹配失败红框闪烁
+          headerSearchInput.classList.add('has-error');
+          headerSearchInput.focus();
+          setTimeout(function() {
+            headerSearchInput.classList.remove('has-error');
+          }, 1200);
+        }
+        if (headerAcList) {
+          headerAcList.classList.remove('is-visible');
+        }
+      }
+
+      // --- Contact Form Controller ---
+      var contactForm = document.getElementById('contact-form');
+      var formStatus = document.getElementById('form-status');
+      if (contactForm && formStatus) {
+        contactForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          var emailInput = document.getElementById('contact-email');
+          var messageInput = document.getElementById('contact-message');
+          var submitBtn = document.getElementById('contact-submit-btn');
+          var locale = contactForm.getAttribute('data-locale');
+
+          formStatus.textContent = locale === 'zh' ? '正在拉起邮件系统...' : locale === 'ja' ? 'メールアプリを起動中...' : 'Launching email client...';
+          formStatus.className = 'form-status is-loading';
+          if (submitBtn) submitBtn.disabled = true;
+
+          var mailtoUrl = 'mailto:contact@example.com?subject=' + 
+            encodeURIComponent(locale === 'zh' ? '来自官网的建材咨询' : locale === 'ja' ? 'ウェブサイトからのお問い合わせ' : 'Inquiry from Website') + 
+            '&body=' + encodeURIComponent((locale === 'zh' ? '发件人邮箱：' : locale === 'ja' ? '送信者：' : 'Sender: ') + emailInput.value + '\n\n' + (locale === 'zh' ? '内容：\n' : locale === 'ja' ? '内容：\n' : 'Content:\n') + messageInput.value);
+
+          setTimeout(function() {
+            window.location.href = mailtoUrl;
+            formStatus.textContent = locale === 'zh' ? '已唤起邮件系统，请在邮件软件中点击发送。' : locale === 'ja' ? 'メールアプリを起動しました。送信ボタンを押してください。' : 'Email client opened. Please send the email from your application.';
+            formStatus.className = 'form-status is-success';
+            if (emailInput) emailInput.value = '';
+            if (messageInput) messageInput.value = '';
+            if (submitBtn) submitBtn.disabled = false;
+
+            // 6秒后平滑清空提示
+            setTimeout(function() {
+              if (formStatus) {
+                formStatus.textContent = '';
+                formStatus.className = 'form-status';
+              }
+            }, 6000);
+          }, 800);
+        });
+      }
+    })();
+  </script>
+
+  <style is:global>
+    /* 顶部精致微型搜索框专属联想列表样式 */
+    #header-search-autocomplete-list {
+      width: 220px;
+      right: 0;
+      left: auto;
+    }
+    #header-search-autocomplete-list .ac-item {
+      padding: 8px 14px;
+      font-size: var(--text-xs);
+    }
+    #header-search-autocomplete-list .ac-item-code {
+      font-size: var(--text-xs);
+    }
+    #header-search-autocomplete-list .ac-item-page {
+      font-size: var(--text-xs);
+      opacity: 0.8;
+    }
+  </style>
+</BaseLayout>
+

@@ -1,0 +1,43 @@
+---
+const fallbackScript = `
+(() => {
+  const supportedLocales = new Set(["ja", "zh", "en"]);
+  const normalizeLocale = (value) => {
+    if (!value) return "";
+    const locale = value.trim().toLowerCase().split(/[-_]/)[0];
+    return supportedLocales.has(locale) ? locale : "";
+  };
+  const getCookie = (name) => {
+    const cookies = document.cookie ? document.cookie.split(";") : [];
+    for (const cookie of cookies) {
+      const [rawKey, ...rawValue] = cookie.trim().split("=");
+      if (rawKey === name) return decodeURIComponent(rawValue.join("="));
+    }
+    return "";
+  };
+  const browserLocale = navigator.languages?.map(normalizeLocale).find(Boolean) || normalizeLocale(navigator.language) || "en";
+  const locale = normalizeLocale(getCookie("harborlink-locale")) || browserLocale || "en";
+  window.location.replace("/" + locale + "/");
+})();
+`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, follow" />
+    <title>領港工業グループ</title>
+    <script set:html={fallbackScript}></script>
+  </head>
+  <body>
+    <noscript>
+      <p>
+        <a href="/ja/">日本語</a>
+        <a href="/zh/">中文</a>
+        <a href="/en/">English</a>
+      </p>
+    </noscript>
+  </body>
+</html>

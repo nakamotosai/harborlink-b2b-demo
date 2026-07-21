@@ -1,0 +1,99 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const themes = [
+  {
+    id: "O",
+    name: "Current Green",
+    jp: "現行グリーン",
+    fit: "現在の配色。視認性は高いが、少し強く見えるため控えめな候補と比較する基準にする。",
+    score: "基準テーマ",
+    colors: ["#fff", "#dfe5df", "#65736c", "#003f31", "#00543f"]
+  },
+  {
+    id: "A",
+    name: "Warm Stone",
+    jp: "ウォームストーン",
+    fit: "日本の中小建材商社に一番近い。白、石材グレー、淡い砂色で落ち着く。",
+    score: "推奨度 92",
+    colors: ["#f8f7f3", "#d8d2c6", "#80786b", "#2f3431", "#9b8765"]
+  },
+  {
+    id: "B",
+    name: "Ink Gray",
+    jp: "墨グレー",
+    fit: "ゼネコン・建材メーカー寄り。信頼感は強いが、少し硬く見える。",
+    score: "推奨度 88",
+    colors: ["#fafafa", "#e5e7e6", "#8b918f", "#202725", "#6f7773"]
+  },
+  {
+    id: "C",
+    name: "Porcelain Blue Gray",
+    jp: "磁器ブルーグレー",
+    fit: "清潔感と輸出商社感が出る。冷たくなりすぎないよう木目写真と合わせる。",
+    score: "推奨度 86",
+    colors: ["#f7f9f9", "#d8e0e1", "#78898c", "#253235", "#8b9da1"]
+  },
+  {
+    id: "D",
+    name: "Muted Olive",
+    jp: "くすみオリーブ",
+    fit: "現在の緑を残すならこの方向。彩度を落とすと日本企業サイトらしくなる。",
+    score: "推奨度 84",
+    colors: ["#f7f7f1", "#dfe2d6", "#8a927f", "#30382f", "#6f765e"]
+  },
+  {
+    id: "E",
+    name: "Clay Brown",
+    jp: "土ものブラウン",
+    fit: "タイル素材感は強い。ただし重くなりやすいのでアクセント用途向き。",
+    score: "推奨度 80",
+    colors: ["#faf7f2", "#e1d5c7", "#9b8069", "#352d28", "#8f6c4f"]
+  }
+];
+---
+
+<BaseLayout title="建材サイト配色案 | 領港">
+  <main class="theme-page">
+    <section class="theme-hero">
+      <p class="theme-kicker">Open Design Theme Board</p>
+      <h1>日本向け建材会社サイトの配色候補</h1>
+      <p>右下の配色ボタンから、現行配色を含む6種類をサイト全体に切り替えられる。日本企業サイト寄りにするなら、低彩度・白余白・素材色を主役にする。</p>
+    </section>
+
+    <section class="theme-grid" aria-label="Theme options">
+      {themes.map((theme) => (
+        <article class={`theme-card theme-${theme.id.toLowerCase()}`}>
+          <div class="theme-card-head">
+            <span>{theme.id}</span>
+            <div>
+              <h2>{theme.name}</h2>
+              <p>{theme.jp}</p>
+            </div>
+          </div>
+          <div class="theme-swatches">
+            {theme.colors.map((color) => <i style={`background:${color}`} title={color}></i>)}
+          </div>
+          <div class="theme-preview">
+            <div class="preview-header">
+              <strong>領港</strong>
+              <span>日本語</span>
+            </div>
+            <div class="preview-hero">
+              <h3>日本向けタイル・石材</h3>
+              <p>落ち着いた余白と素材写真を主役にした企業サイト。</p>
+              <button>カタログを見る</button>
+            </div>
+            <div class="preview-row">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <p class="theme-fit">{theme.fit}</p>
+          <p class="theme-score">{theme.score}</p>
+        </article>
+      ))}
+    </section>
+  </main>
+</BaseLayout>

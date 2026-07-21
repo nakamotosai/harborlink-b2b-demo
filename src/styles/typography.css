@@ -1,0 +1,701 @@
+/* ================================================================
+   typography.css — 全局字体大小统一管理
+   目标受众：日本老年客户（65+）
+   最小字号：13px（WCAG 无障碍标准）
+   ================================================================ */
+
+:root {
+  /* ── 基础字体大小梯度 ── */
+  --text-xs:   17px;   /* 最小标签、徽章 */
+  --text-sm:   19px;   /* 辅助文字、描述 */
+  --text-base: 23px;   /* 正文（默认） */
+  --text-lg:   26px;   /* 强调正文 */
+  --text-xl:   40px;   /* 小标题 */
+  --text-2xl:  50px;   /* 标题 */
+  --text-3xl:  40px;   /* 大标题 */
+  --text-4xl:  57px;   /* 英雄区标题 */
+
+  /* ── 行高 ── */
+  --leading-tight: 1.35;
+  --leading-normal: 1.6;
+  --leading-relaxed: 1.85;
+  --leading-loose: 2.0;
+
+  /* ── 字间距 ── */
+  --tracking-tight: -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.05em;
+  --tracking-wider: 0.15em;
+  --tracking-widest: 0.18em;
+}
+
+/* ================================================================
+   以下为各组件专用字体大小（按组件名分组）
+   ================================================================ */
+
+/* ── 搜索框 ── */
+#header-search-input {
+  font-size: var(--text-xs);
+}
+
+/* ── 导航 ── */
+.main-nav {
+  font-size: var(--text-sm);
+}
+
+.language-menu {
+  font-size: var(--text-xs);
+}
+
+/* ── Hero 区域 ── */
+.hero h1 {
+  font-size: var(--text-4xl);
+}
+
+.hero-copy {
+  font-size: var(--text-lg);
+}
+
+.hero-url-line {
+  font-size: var(--text-xs);
+}
+
+.hero-email-line {
+  font-size: var(--text-xs);
+}
+
+.hero-badge {
+  font-size: var(--text-xs);
+}
+
+/* ── 任务卡片 ── */
+  .task-card span {
+    font-size: var(--text-xs);
+  }
+
+  .task-card strong {
+    font-size: var(--text-lg);
+  }
+
+  .task-card small {
+  font-size: var(--text-xs);
+}
+
+/* ── 区域标题 ── */
+.section-heading h2 {
+  font-size: var(--text-2xl);
+}
+
+.section-heading > p {
+  font-size: var(--text-sm);
+}
+
+/* ── 产品卡片 ── */
+.product-card h3 {
+  font-size: var(--text-lg);
+}
+
+.product-card:first-child h3 {
+  font-size: var(--text-xl);
+}
+
+.product-code {
+  font-size: var(--text-xs);
+}
+
+.product-meta small {
+  font-size: var(--text-xs);
+}
+
+.product-card p {
+  font-size: var(--text-sm);
+}
+
+.product-specs dt {
+  font-size: var(--text-xs);
+}
+
+.product-specs dd {
+  font-size: var(--text-xs);
+}
+
+/* ── 搜索面板 ── */
+.search-panel p {
+  font-size: var(--text-sm);
+}
+
+.search-result {
+  font-size: var(--text-xs);
+}
+
+/* ── 目录卡片 ── */
+.catalog-card h3 {
+  font-size: var(--text-xl);
+}
+
+.catalog-card h3 span {
+  font-size: var(--text-lg);
+}
+
+.catalog-card p {
+  font-size: var(--text-xs);
+}
+
+.catalog-meta {
+  font-size: var(--text-xs);
+}
+
+.catalog-total-box > span {
+  font-size: var(--text-xs);
+}
+
+.pdf-button {
+  font-size: var(--text-sm);
+}
+
+/* ── 加工区域 ── */
+.processing-lead {
+  font-size: var(--text-base);
+}
+
+.processing-content .section-heading h2 {
+  font-size: var(--text-2xl);
+}
+
+.processing-content p {
+  font-size: var(--text-sm);
+}
+
+.details-num {
+  font-size: var(--text-xl);
+}
+
+.details-column h3 {
+  font-size: var(--text-sm);
+}
+
+.details-column p {
+  font-size: var(--text-sm);
+}
+
+/* ── 标签网格（6个标签两行三列） ── */
+.processing-section .tag-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.tag-grid span {
+  font-size: var(--text-xs);
+}
+
+/* ── 信頼を築き、価値を届ける — 逗号后允许换行 ── */
+.company-main-cards .section-heading h2,
+.company-facts .section-heading h2 {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  line-break: strict;
+}
+
+/* ── 日本支持区域 ── */
+.japan-support-head h3 {
+  font-size: var(--text-xl);
+}
+
+.japan-support-grid strong {
+  font-size: var(--text-lg);
+}
+
+.japan-support-grid p {
+  font-size: var(--text-xs);
+}
+
+/* ── 质量卡片 ── */
+.quality-card h3 {
+  font-size: var(--text-lg);
+}
+
+.quality-card p {
+  font-size: var(--text-xs);
+}
+
+.quality-body > span {
+  font-size: var(--text-2xl);
+}
+
+/* ── 页脚 ── */
+.footer-info-tagline {
+  font-size: var(--text-sm);
+}
+
+.footer-info-desc {
+  font-size: var(--text-xs);
+}
+
+.footer-col-title {
+  font-size: var(--text-sm);
+}
+
+.footer-col-links a {
+  font-size: var(--text-sm);
+}
+
+.footer-contact-details strong {
+  font-size: var(--text-sm);
+}
+
+.footer-contact-details span {
+  font-size: var(--text-xs);
+}
+
+.footer-bottom p {
+  font-size: var(--text-sm);
+}
+
+.footer-subtitle {
+  font-size: var(--text-xs);
+}
+
+.footer-message,
+.footer-cta p {
+  font-size: var(--text-xs);
+}
+
+.footer-nav a {
+  font-size: var(--text-xs);
+}
+
+.footer-button {
+  font-size: var(--text-xs);
+}
+
+/* ── 设置面板 ── */
+.settings-switcher-panel p {
+  font-size: var(--text-xs);
+}
+
+.font-choice small {
+  font-size: var(--text-xs);
+}
+
+/* ── 主题页面 ── */
+.theme-kicker {
+  font-size: var(--text-xs);
+}
+
+.theme-hero h1 {
+  font-size: var(--text-3xl);
+}
+
+.theme-hero p:not(.theme-kicker) {
+  font-size: var(--text-base);
+}
+
+.theme-card h2 {
+  font-size: var(--text-2xl);
+}
+
+.preview-header {
+  font-size: var(--text-xs);
+}
+
+.preview-hero h3 {
+  font-size: var(--text-2xl);
+}
+
+/* ── 案例卡片 ── */
+.case-year {
+  font-size: var(--text-xs);
+}
+
+.case-card-body h3 {
+  font-size: var(--text-lg);
+}
+
+.case-details div {
+  font-size: var(--text-xs);
+}
+
+/* ── 公司信息 ── */
+.company-facts .section-heading h2 {
+  font-size: var(--text-2xl);
+}
+
+.company-facts .section-heading h2[lang="ja"] {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.company-facts .section-heading h2[lang="ja"]::after {
+  content: "";
+}
+
+.company-profile-title {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.company-profile-title::after {
+  content: "";
+}
+
+.company-lead {
+  font-size: var(--text-xs);
+}
+
+.company-facts dt,
+.company-facts dd {
+  font-size: var(--text-lg);
+}
+
+/* ── 联系卡片 ── */
+.contact-card h2 {
+  font-size: var(--text-xl);
+}
+
+.contact-card p {
+  font-size: var(--text-xs);
+}
+
+/* ── 目录操作卡片 ── */
+.catalog-action-copy strong {
+  font-size: var(--text-sm);
+}
+
+.catalog-action-copy small {
+  font-size: var(--text-xs);
+}
+
+.catalog-action-copy em {
+  font-size: var(--text-xs);
+}
+
+.catalog-storage-note {
+  font-size: var(--text-xs);
+}
+
+.catalog-card-button {
+  font-size: var(--text-xs);
+}
+
+.catalog-card h3 {
+  font-size: var(--text-xl);
+}
+
+/* ── 图片编辑 ── */
+.image-edit-upload {
+  font-size: var(--text-xs);
+}
+
+/* ── 响应式断点 ── */
+@media (max-width: 1020px) {
+  .hero h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
+@media (min-width: 721px) and (max-width: 1020px) {
+  .task-card span {
+    font-size: var(--text-xs);
+  }
+
+  .task-card strong {
+    font-size: var(--text-sm);
+  }
+
+  .task-card small {
+    font-size: var(--text-xs);
+  }
+
+  .section-heading h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .section-heading > p {
+    font-size: var(--text-sm);
+  }
+
+  .product-code {
+    font-size: var(--text-xs);
+  }
+
+  .product-meta small {
+    font-size: var(--text-xs);
+  }
+
+  .product-card h3 {
+    font-size: 17px;
+  }
+
+  .product-card:first-child h3 {
+    font-size: 17px;
+  }
+
+  .product-card p {
+    font-size: 14px;
+  }
+
+  .product-card:first-child p {
+    font-size: 14px;
+  }
+
+  .search-panel p {
+    font-size: var(--text-sm);
+  }
+
+  .search-result {
+    font-size: var(--text-xs);
+  }
+
+  .catalog-meta {
+    font-size: var(--text-xs);
+  }
+
+  .catalog-card h3 {
+    font-size: var(--text-xs);
+  }
+
+  .catalog-card h3 span {
+    font-size: var(--text-xs);
+  }
+
+  .pdf-button {
+    font-size: var(--text-xs);
+  }
+
+  .processing-content .section-heading h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .processing-content p {
+    font-size: var(--text-sm);
+  }
+
+  .tag-grid span {
+    font-size: var(--text-xs);
+  }
+
+  .quality-body > span {
+    font-size: var(--text-xs);
+  }
+
+  .quality-card h3 {
+    font-size: var(--text-lg);
+  }
+
+  .quality-card p {
+    font-size: var(--text-xs);
+  }
+
+  .japan-support-head h3 {
+    font-size: var(--text-xl);
+  }
+
+  .japan-support-grid strong {
+    font-size: var(--text-lg);
+  }
+
+  .japan-support-grid p {
+    font-size: var(--text-xs);
+  }
+
+  .company-facts .section-heading h2 {
+    font-size: var(--text-2xl);
+  }
+
+  .company-lead {
+    font-size: var(--text-sm);
+  }
+
+  .company-facts dt,
+  .company-facts dd {
+    font-size: var(--text-lg);
+  }
+
+  .contact-card h2 {
+    font-size: var(--text-xl);
+  }
+
+  .contact-card p {
+    font-size: var(--text-xs);
+  }
+
+  .footer-subtitle {
+    font-size: var(--text-xs);
+  }
+
+  .footer-message,
+  .footer-cta p {
+    font-size: var(--text-xs);
+  }
+
+  .footer-nav a {
+    font-size: var(--text-xs);
+  }
+
+  .footer-button {
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 720px) {
+  .language-menu {
+    font-size: var(--text-xs);
+  }
+
+  .settings-switcher-header .settings-switcher-toggle {
+    font-size: var(--text-xs);
+  }
+
+  .hero h1 {
+    font-size: var(--text-2xl);
+  }
+
+  .hero-copy {
+    font-size: var(--text-sm);
+  }
+
+  .hero-badge {
+    font-size: var(--text-xs);
+  }
+
+  .task-card span {
+    font-size: var(--text-xs);
+  }
+
+  .task-card strong {
+    font-size: var(--text-sm);
+  }
+
+  .task-card small {
+    font-size: var(--text-xs);
+  }
+
+  .section-heading h2 {
+    font-size: clamp(24px, 5.8vw, 34px);
+  }
+
+  .section-heading > p {
+    font-size: var(--text-sm);
+  }
+
+  .product-code {
+    font-size: var(--text-xs);
+  }
+
+  .product-meta small {
+    font-size: var(--text-xs);
+  }
+
+  .product-card h3 {
+    font-size: 17px;
+  }
+
+  .product-card:first-child h3 {
+    font-size: 17px;
+  }
+
+  .product-card p {
+    font-size: 14px;
+  }
+
+  .product-card:first-child p {
+    font-size: 14px;
+  }
+
+  .search-panel p {
+    font-size: var(--text-sm);
+  }
+
+  .search-result {
+    font-size: var(--text-xs);
+  }
+
+  .catalog-meta {
+    font-size: var(--text-xs);
+  }
+
+  .catalog-card h3 {
+    font-size: var(--text-xs);
+  }
+
+  .catalog-card h3 span {
+    font-size: var(--text-xs);
+  }
+
+  .pdf-button {
+    font-size: var(--text-xs);
+  }
+
+  .processing-content .section-heading h2 {
+    font-size: clamp(24px, 5.8vw, 34px);
+  }
+
+  .processing-content p {
+    font-size: var(--text-sm);
+  }
+
+  .processing-section .tag-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tag-grid span {
+    font-size: var(--text-xs);
+  }
+
+  .quality-body > span {
+    font-size: 26px !important;
+    font-weight: var(--weight-bold) !important;
+  }
+
+  .quality-card h3 {
+    font-size: var(--text-lg);
+  }
+
+  .quality-card p {
+    font-size: var(--text-xs);
+  }
+
+  .japan-support-head h3 {
+    font-size: clamp(22px, 5.2vw, 30px);
+  }
+
+  .japan-support-grid strong {
+    font-size: var(--text-lg);
+  }
+
+  .japan-support-grid p {
+    font-size: var(--text-xs);
+  }
+
+  .company-facts .section-heading h2 {
+    font-size: clamp(24px, 5.8vw, 34px);
+  }
+
+  .company-lead {
+    font-size: var(--text-xs);
+  }
+
+  .company-facts dt,
+  .company-facts dd {
+    font-size: var(--text-lg);
+  }
+
+  .contact-card h2 {
+    font-size: var(--text-xl);
+  }
+
+  .contact-card p {
+    font-size: var(--text-xs);
+  }
+
+  .footer-subtitle {
+    font-size: var(--text-xs);
+  }
+}
+
+@media (max-width: 360px) {
+  .hero h1 {
+    font-size: var(--text-2xl);
+  }
+}
