@@ -1899,13 +1899,20 @@ html[lang="zh"] .hero h1 {
 }
 
 .footer-symbol-mark {
-  display: block;
-  width: 156px;
+  display: inline-flex;
+  align-items: center;
   height: 36px;
-  background: currentColor;
-  color: var(--color-gold);
-  mask: url(/images/brand/harborlink-mark.png) no-repeat center;
-  mask-size: contain;
+  font-family: var(--font-ui), "Segoe UI", system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--color-gold, #c45c26);
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: none;
+}
+.footer-symbol-mark::after {
+  content: "HARBORLINK";
 }
 
 .footer-info-tagline {
