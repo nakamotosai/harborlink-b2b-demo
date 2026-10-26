@@ -1,0 +1,12 @@
+# Cloudflare Pages headers — 2026-10-26 SEO:机器接口与内部页面不参与索引
+/api/*
+  X-Robots-Tag: noindex, nofollow
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+
+/catalog-image/*
+  X-Robots-Tag: noindex, nofollow
+
+/design/*
+  X-Robots-Tag: noindex, nofollow

@@ -10,7 +10,11 @@ const allowedFiles = new Set([
 const badRequest = (message, status = 400) =>
   new Response(message, {
     status,
-    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" }
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "cache-control": "no-store",
+      "x-robots-tag": "noindex, nofollow"
+    }
   });
 
 const handleCatalogRequest = async ({ request }) => {
@@ -28,6 +32,7 @@ const handleCatalogRequest = async ({ request }) => {
   headers.set("cache-control", "public, max-age=60");
   headers.set("x-content-type-options", "nosniff");
   headers.set("x-demo-note", "local-placeholder-pdf");
+  headers.set("x-robots-tag", "noindex, nofollow");
   if (url.searchParams.get("download") === "1") {
     const dlName = file.replace("-download", "");
     headers.set("content-disposition", `attachment; filename="${dlName}"`);

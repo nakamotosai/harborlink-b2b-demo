@@ -2,7 +2,11 @@
 const badRequest = (message, status = 400) =>
   new Response(message, {
     status,
-    headers: { "content-type": "text/plain; charset=utf-8", "cache-control": "no-store" }
+    headers: {
+      "content-type": "text/plain; charset=utf-8",
+      "cache-control": "no-store",
+      "x-robots-tag": "noindex, nofollow"
+    }
   });
 
 export const onRequestGet = async () =>

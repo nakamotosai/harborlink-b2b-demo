@@ -9,6 +9,7 @@ const json = (body, status = 200) =>
     headers: {
       "content-type": "application/json; charset=utf-8",
       "cache-control": "no-store",
+      "x-robots-tag": "noindex, nofollow",
       "access-control-allow-origin": "*",
       "access-control-allow-headers": "content-type, x-admin-token",
       "access-control-allow-methods": "GET, POST, OPTIONS"

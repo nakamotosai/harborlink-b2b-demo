@@ -1,0 +1,62 @@
+---
+/* 2026-10-26 SEO:真正的 404 页(此前未命中的路径会回落到根壳页并返回 200 + noindex 壳,
+   对 Google 是"软 404"。有了 dist/404.html,Pages 会以 404 状态码返回本页)。 */
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="404 · ページが見つかりません | 領港工業グループ"
+  description="指定されたページは見つかりませんでした。"
+  robots="noindex, follow"
+>
+  <main class="nf-wrap">
+    <p class="nf-code">404</p>
+    <h1 class="nf-title">ページが見つかりません</h1>
+    <p class="nf-lead">
+      お探しのページは移動または削除された可能性があります。<br />
+      下記の言語から入り直してください。
+    </p>
+    <nav class="nf-nav" aria-label="言語選択">
+      <a href="/ja/">日本語</a>
+      <a href="/zh/">中文</a>
+      <a href="/en/">English</a>
+    </nav>
+  </main>
+</BaseLayout>
+
+<style>
+  .nf-wrap {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 4rem 1.5rem;
+    text-align: center;
+  }
+  .nf-code {
+    font-size: 3.5rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    margin: 0;
+    color: var(--color-accent, #9b8069);
+  }
+  .nf-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+  }
+  .nf-lead {
+    margin: 0;
+    line-height: 1.9;
+  }
+  .nf-nav {
+    display: flex;
+    gap: 1.25rem;
+    margin-top: 1rem;
+  }
+  .nf-nav a {
+    text-decoration: underline;
+  }
+</style>

@@ -1,0 +1,11 @@
+# https://demo-1.saaaai.com/robots.txt
+# 2026-10-26 SEO:三语静态站放行抓取;内部页面直接挡,机器接口改用 X-Robots-Tag noindex
+# (Functions 响应不吃 _headers,所以 /api/* 在函数里发 noindex 头 —— 让 Google 抓得到、看得见、
+#  然后把这批参数化 URL 从索引里删掉,比 robots 屏蔽更干净)
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /design/
+Disallow: /catalog-image/
+
+Sitemap: https://demo-1.saaaai.com/sitemap.xml

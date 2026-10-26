@@ -9,14 +9,50 @@ interface Props {
   description?: string;
   lang?: "ja" | "zh" | "en";
   preloadImages?: string[];
+  robots?: string;
 }
 
 const {
   title = "領港工業グループ",
   description = "日本向けタイル・石材輸出の専門パートナー",
   lang = "ja",
-  preloadImages = []
+  preloadImages = [],
+  robots = "index, follow, max-image-preview:large, max-snippet:-1"
 } = Astro.props;
+
+/* 2026-10-26 SEO:canonical / hreflang / OGP / JSON-LD。
+   三语页各自自指 canonical,并互相声明 hreflang(ja/zh/en + x-default=ja),
+   根路径 / 由 functions/index.js 302 到对应语种页,不再与 /ja/ 重复。 */
+const SITE_URL = (Astro.site ?? new URL("https://demo-1.saaaai.com/")).href;
+const ROUTE_BY_LANG: Record<"ja" | "zh" | "en", string> = { ja: "/ja/", zh: "/zh/", en: "/en/" };
+const canonicalUrl = new URL(ROUTE_BY_LANG[lang], SITE_URL).href;
+const alternateLocales = [
+  { hreflang: "ja", href: new URL("/ja/", SITE_URL).href },
+  { hreflang: "zh", href: new URL("/zh/", SITE_URL).href },
+  { hreflang: "en", href: new URL("/en/", SITE_URL).href },
+  { hreflang: "x-default", href: new URL("/ja/", SITE_URL).href }
+];
+const OG_LOCALE: Record<"ja" | "zh" | "en", string> = { ja: "ja_JP", zh: "zh_CN", en: "en_US" };
+const ogLocale = OG_LOCALE[lang];
+const ogImage = new URL("/images/prototype/hero-room.jpg", SITE_URL).href;
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      name: "領港工業グループ",
+      url: SITE_URL,
+      logo: new URL("/logo.png", SITE_URL).href,
+      description: "ポートフォリオ用に制作した架空の B2B 建材企業サイト(実在の企業・取引先ではありません)。"
+    },
+    {
+      "@type": "WebSite",
+      name: title,
+      url: canonicalUrl,
+      inLanguage: lang
+    }
+  ]
+};
 
 const settingsLabels = {
   ja: {
@@ -210,6 +246,23 @@ const fontOptions = [
       })();
     </script>
     {isDev && <link rel="stylesheet" href="/font-debug-panel.css" />}
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={robots} />
+    {alternateLocales.map((alt) => (
+      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+    ))}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="領港工業グループ" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
     <title>{title}</title>
   </head>
   <body>
