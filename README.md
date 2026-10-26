@@ -37,6 +37,19 @@ npm run preview
 | 原版本机 | `C:\Users\sai\xmza\xmza-main`（只读，本任务未改） |
 | 本目录 | 独立 git；文案 / API / 资产已替换为虚构数据 |
 
+## SEO 基线(2026-10-26)
+
+| 项 | 实现 |
+|---|---|
+| canonical / hreflang | `src/layouts/BaseLayout.astro` 按 `lang` 输出自指 canonical + `ja/zh/en` + `x-default=/ja/` |
+| 社交 / 结构化数据 | 同文件输出 OG、Twitter Card、Organization+WebSite JSON-LD |
+| 根路径 | `functions/index.js` 302 → `/{locale}/`(按 cookie → CF 国家 → Accept-Language) |
+| robots / sitemap | `public/robots.txt`、`public/sitemap.xml`(含 xhtml:link 三语 alternates);`astro.config.mjs` 的 `site` 必须是线上域名 |
+| 不参与索引 | `/design/*` 页面带 `noindex`;`/api/*` 的 Functions 响应自行发 `X-Robots-Tag: noindex, nofollow`(Pages 的 `_headers` 只作用于静态资源) |
+| 真 404 | `src/pages/404.astro` → `dist/404.html`,未知路径不再回落到根壳页返回 200(软 404) |
+
+改动后按 `npm run build` → `wrangler pages deploy dist --project-name=harborlink-b2b-demo --branch=main` 上线。
+
 ## 负向清单
 
 - 不部署到客户域名 / Cloudflare 项目
